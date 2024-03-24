@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    container_name: "jellylink_postgresql"
+    image: postgres:16.2-alpine3.19
+    environment:
+      POSTGRES_DB: jellylink_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres_db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD} 
+    ports:
+      - "8888:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
+  pgadmin_data:
