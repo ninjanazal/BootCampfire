@@ -12,7 +12,7 @@ DROP TABLE if EXISTS public.genders;
 
 CREATE TABLE IF NOT EXISTS public.genders (
 	id SERIAL PRIMARY KEY,
-	description VARCHAR NOT NULL
+	description VARCHAR UNIQUE NOT NULL
 );
 
 
