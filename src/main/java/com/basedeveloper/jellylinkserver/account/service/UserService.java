@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.basedeveloper.jellylinkserver.account.model.User;
-import com.basedeveloper.jellylinkserver.account.repository.GenderRepository;
-import com.basedeveloper.jellylinkserver.account.repository.UserRepository;
+import com.basedeveloper.jellylinkserver.account.entity.User;
+import com.basedeveloper.jellylinkserver.account.repository.GenderRepositoryInterface;
+import com.basedeveloper.jellylinkserver.account.repository.UserRepositoryInterface;
 import com.basedeveloper.jellylinkserver.exceptions.AuthException;
 import com.basedeveloper.jellylinkserver.security.SecurityService;
 
@@ -15,10 +15,10 @@ import com.basedeveloper.jellylinkserver.security.SecurityService;
 public class UserService implements UserServiceInterface {
 
 	@Autowired
-	UserRepository userRepo;
+	UserRepositoryInterface userRepo;
 
 	@Autowired
-	GenderRepository genderRepo;
+	GenderRepositoryInterface genderRepo;
 
 	@Autowired
 	SecurityService securityService;

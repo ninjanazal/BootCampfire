@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.basedeveloper.jellylinkserver.account.model.User;
+import com.basedeveloper.jellylinkserver.account.entity.User;
 import com.basedeveloper.jellylinkserver.account.service.UserService;
 
 @RestController
@@ -22,7 +22,7 @@ public class AccountController {
 	public ResponseEntity<String> regist(@RequestBody User usr) {
 		try {
 			System.out.println(usr);
-			// User createdUser = userService.registerUser(usr);
+			//User createdUser = userService.registerUser(usr);
 			return new ResponseEntity<>(String.format("Created user %s"/* , createdUser.getName() */), HttpStatus.CREATED);
 
 		} catch (Exception e) {

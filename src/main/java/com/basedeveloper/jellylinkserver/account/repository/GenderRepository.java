@@ -1,9 +1,8 @@
 package com.basedeveloper.jellylinkserver.account.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.basedeveloper.jellylinkserver.account.model.Gender;
+@Repository
+public interface GenderRepository extends GenderRepositoryInterface {
 
-public interface GenderRepository extends JpaRepository<Gender, Long> {
-	boolean existsByDescription(String description);
 }

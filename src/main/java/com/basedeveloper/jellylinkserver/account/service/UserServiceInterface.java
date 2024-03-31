@@ -1,6 +1,6 @@
 package com.basedeveloper.jellylinkserver.account.service;
 
-import com.basedeveloper.jellylinkserver.account.model.User;
+import com.basedeveloper.jellylinkserver.account.entity.User;
 import com.basedeveloper.jellylinkserver.exceptions.AuthException;
 
 public interface UserServiceInterface {
