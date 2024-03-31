@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "genders")
+@Table(name = "genders", schema = "login")
 public class Gender {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,7 @@ public class Gender {
 		description = genderDesc;
 	}
 
+	//region Get/Set
 	public Long getId() {
 		return id;
 	}
@@ -37,4 +38,5 @@ public class Gender {
 	public void setDesc(String data) {
 		description = data;
 	}
+	//endregion
 }

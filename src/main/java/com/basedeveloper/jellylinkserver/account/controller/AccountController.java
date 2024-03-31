@@ -21,8 +21,9 @@ public class AccountController {
 	@PostMapping("regist")
 	public ResponseEntity<String> regist(@RequestBody User usr) {
 		try {
-			User createdUser = userService.registerUser(usr);
-			return new ResponseEntity<>(String.format("Created user %s", createdUser.getName()), HttpStatus.CREATED);
+			System.out.println(usr);
+			// User createdUser = userService.registerUser(usr);
+			return new ResponseEntity<>(String.format("Created user %s"/* , createdUser.getName() */), HttpStatus.CREATED);
 
 		} catch (Exception e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);

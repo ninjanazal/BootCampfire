@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", schema = "login")
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,7 @@ public class Role {
 		description = roleDesc;
 	}
 
+	//region Get/Set
 	public Long getId() {
 		return id;
 	}
@@ -37,4 +38,5 @@ public class Role {
 	public void setDescription(String data) {
 		description = data;
 	}
+	//endregion
 }

@@ -12,7 +12,7 @@ import com.basedeveloper.jellylinkserver.security.SecurityService;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserServiceInterface {
 
 	@Autowired
 	UserRepository userRepo;
@@ -28,7 +28,6 @@ public class UserService {
 			throw new AuthException("Email allready in use");
 		}
 
-		
 		// if(genderRepo.existsByDescription(usr.getGender())
 
 		usr.setHshScrt(securityService.EncodeData(usr.getHshScrt()));

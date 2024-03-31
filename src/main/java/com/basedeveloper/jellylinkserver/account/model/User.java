@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "login")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +37,8 @@ public class User {
 	@Column(name = "hashed_password", nullable = false)
 	private String hsh_scrt;
 
+
+	//region Get/Set 
 	public Long getId() {
 		return id;
 	}
@@ -92,4 +94,5 @@ public class User {
 	public void setHshScrt(String data) {
 		hsh_scrt = data;
 	}
+	//endregion
 }
