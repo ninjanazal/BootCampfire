@@ -1,4 +1,4 @@
-package com.basedeveloper.jellylinkserver.data;
+package com.basedeveloper.jellylinkserver.datasources;
 
 import javax.sql.DataSource;
 
@@ -15,25 +15,23 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import jakarta.persistence.EntityManagerFactory;
-
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "accountEntityManagerFactory", transactionManagerRef = "accountTransactionManager", basePackages = {
+@EnableJpaRepositories(entityManagerFactoryRef = "accountEntityManagerFactory",transactionManagerRef = "accountTransactionManager",  basePackages = {
 		"com.basedeveloper.jellylinkserver.account.repository" })
 public class AccountDataSourceConfiguration {
 
 	// Account data Source
-	@Bean(name = "accountDataSource")
 	@Primary
-	@ConfigurationProperties("spring.account.datasource")
+	@Bean(name = "accountDataSource")
+	@ConfigurationProperties(prefix = "spring.account.datasource")
 	public DataSource accountDataSource() {
 		return DataSourceBuilder.create().build();
 	}
 
 	@Primary
 	@Bean(name = "accountEntityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean accouEntityManagerFactoryBean(EntityManagerFactoryBuilder builder,
+	public LocalContainerEntityManagerFactoryBean accountEntityManagerFactory(EntityManagerFactoryBuilder builder,
 			@Qualifier("accountDataSource") DataSource accounDataSource) {
 		return builder.dataSource(accounDataSource)
 				.packages("com.basedeveloper.jellylinkserver.account.entity")
@@ -42,9 +40,13 @@ public class AccountDataSourceConfiguration {
 
 	@SuppressWarnings("null")
 	@Bean(name = "accountTransactionManager")
-	public PlatformTransactionManager accouTransactionManager(
-			@Qualifier("accountEntityManagerFactory") EntityManagerFactory accountEntityManagerFactory) {
-		return new JpaTransactionManager(accountEntityManagerFactory);
-	}
+	@Primary
+	public PlatformTransactionManager accountTransactionManager(
+			final @Qualifier("accountEntityManagerFactory") LocalContainerEntityManagerFactoryBean accountEntityManagerFactory) {
 
+		if (accountEntityManagerFactory.getObject() == null) {
+			throw new IllegalStateException("EntityManager is null on accountTransactionManager");
+		}
+		return new JpaTransactionManager(accountEntityManagerFactory.getObject());
+	}
 }

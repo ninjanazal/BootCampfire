@@ -17,12 +17,14 @@ public class Role {
 	@Column(name = "description", nullable = false, unique = true)
 	private String description;
 
-	public Role(Long roleId, String roleDesc) {
-		id = roleId;
-		description = roleDesc;
+	public Role() {
 	}
 
-	//region Get/Set
+	public Role(String desc) {
+		description = desc;
+	}
+
+	// region Get/Set
 	public Long getId() {
 		return id;
 	}
@@ -38,5 +40,5 @@ public class Role {
 	public void setDescription(String data) {
 		description = data;
 	}
-	//endregion
+	// endregion
 }

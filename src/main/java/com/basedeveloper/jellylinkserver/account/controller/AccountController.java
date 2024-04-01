@@ -1,5 +1,8 @@
 package com.basedeveloper.jellylinkserver.account.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +22,17 @@ public class AccountController {
 	UserService userService;
 
 	@PostMapping("regist")
-	public ResponseEntity<String> regist(@RequestBody User usr) {
+	public ResponseEntity<Map<String, String>> regist(@RequestBody User usr) {
+		Map<String,String> responseData = new HashMap<>();
+		responseData.put("message", "Created user");
 		try {
 			System.out.println(usr);
 			//User createdUser = userService.registerUser(usr);
-			return new ResponseEntity<>(String.format("Created user %s"/* , createdUser.getName() */), HttpStatus.CREATED);
+			return new ResponseEntity<>(responseData, HttpStatus.CREATED);
 
 		} catch (Exception e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			responseData.put("message", "Failed to create");
+			return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
 		}
 
 	}
