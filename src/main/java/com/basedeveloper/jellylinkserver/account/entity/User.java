@@ -25,6 +25,9 @@ public class User {
 	@JoinColumn(name = "gender_id", nullable = false)
 	private Gender gender;
 
+	@Column(name = "user_token", unique = true, nullable = false)
+	private String userToken;
+
 	@Column(name = "email", nullable = false)
 	private String email;
 
@@ -37,8 +40,7 @@ public class User {
 	@Column(name = "hashed_password", nullable = false)
 	private String hsh_scrt;
 
-
-	//region Get/Set 
+	// region Get/Set
 	public Long getId() {
 		return id;
 	}
@@ -61,6 +63,14 @@ public class User {
 
 	public void setGender(Gender data) {
 		gender = data;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
+
+	public String getUserToken() {
+		return userToken;
 	}
 
 	public String getEmail() {
@@ -94,5 +104,5 @@ public class User {
 	public void setHshScrt(String data) {
 		hsh_scrt = data;
 	}
-	//endregion
+	// endregion
 }

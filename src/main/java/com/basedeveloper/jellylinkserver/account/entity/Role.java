@@ -1,5 +1,7 @@
 package com.basedeveloper.jellylinkserver.account.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +13,8 @@ import jakarta.persistence.Table;
 @Table(name = "roles")
 public class Role {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "genderSeq")
+	@GenericGenerator(name = "genderSeq", strategy = "increment")
 	private Long id;
 
 	@Column(name = "description", nullable = false, unique = true)

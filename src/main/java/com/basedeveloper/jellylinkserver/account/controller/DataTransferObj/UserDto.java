@@ -1,13 +1,10 @@
 package com.basedeveloper.jellylinkserver.account.controller.DataTransferObj;
 
-import jakarta.validation.constraints.NotBlank;;
-
-
 public class UserDto {
-	private String role;
+
 	private String gender;
+	private String role = "default";
 	private String email;
-	@NotBlank(message = "Name cannot be empty")
 	private String name;
 	private Integer age;
 	private String password;
@@ -60,7 +57,6 @@ public class UserDto {
 	public String getPassword() {
 		return password;
 	}
-
 	// endregion
 
 }
