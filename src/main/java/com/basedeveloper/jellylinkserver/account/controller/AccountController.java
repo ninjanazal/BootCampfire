@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
 import com.basedeveloper.jellylinkserver.account.entity.User;
 import com.basedeveloper.jellylinkserver.account.service.UserService;
 
@@ -22,7 +23,7 @@ public class AccountController {
 	UserService userService;
 
 	@PostMapping("regist")
-	public ResponseEntity<Map<String, String>> regist(@RequestBody User usr) {
+	public ResponseEntity<Map<String, String>> regist(@RequestBody UserDto usr) {
 		Map<String,String> responseData = new HashMap<>();
 		responseData.put("message", "Created user");
 		try {
