@@ -1,12 +1,35 @@
 package com.basedeveloper.jellylinkserver.account.controller.DataTransferObj;
 
+import org.springframework.lang.Nullable;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class UserDto {
 
+	@NotBlank(message = "Gender cant be blank")
+	@NotNull(message = "Gender cant be null")
 	private String gender;
+
+	@Nullable
 	private String role = "default";
+	
+	@NotNull(message = "Invalid email format")
+	@Email(message = "Invalid email format")
 	private String email;
+	
+	@NotNull(message = "Name is required")
+	@NotBlank(message = "Name cannot be blank")
 	private String name;
+	
+	@Min(value = 1, message = "Age must be a non-negative integer")
+	@NotNull(message = "Age is required")
 	private Integer age;
+
+	@NotNull(message = "Password is required")
+	@NotBlank(message = "Password cannot be blank")
 	private String password;
 
 	// region Set/Get

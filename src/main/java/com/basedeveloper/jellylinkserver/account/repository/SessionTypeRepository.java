@@ -5,6 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(value = "accountTransactionManager")
-public interface RoleRepository extends RoleRepositoryInterface {
-
+public interface SessionTypeRepository extends SessionTypeRepositoryInterface{
+	
 }

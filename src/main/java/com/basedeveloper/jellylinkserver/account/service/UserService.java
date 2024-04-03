@@ -56,21 +56,9 @@ public class UserService implements UserServiceInterface {
 			throw new CreationException("Failed to create User, Email allready in use");
 		}
 		createdUser.setEmail(dto.getEmail());
-
-		// Validate Password
-		if(dto.getPassword() == null || dto.getPassword().isEmpty()){
-			throw new CreationException("Failed to create User, invalid password");
-		}
 		createdUser.setHshScrt(securityService.EncodeData(dto.getPassword()));
 
-		if(dto.getName().isEmpty() || dto.getName() == null){
-			throw new CreationException("Failed to create User, name cant be empty");
-		}
 		createdUser.setName(dto.getName());
-
-		if(dto.getAge() <= 0){
-			throw new CreationException("Failed to create User, invalid age");
-		}
 		createdUser.setAge(dto.getAge());
 
 		String userToken = UUID.randomUUID().toString();

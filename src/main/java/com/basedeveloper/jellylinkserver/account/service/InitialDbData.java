@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.basedeveloper.jellylinkserver.account.entity.Gender;
 import com.basedeveloper.jellylinkserver.account.entity.Role;
+import com.basedeveloper.jellylinkserver.account.entity.SessionType;
 import com.basedeveloper.jellylinkserver.account.repository.GenderRepository;
 import com.basedeveloper.jellylinkserver.account.repository.RoleRepository;
+import com.basedeveloper.jellylinkserver.account.repository.SessionTypeRepository;
 
 import jakarta.annotation.PostConstruct;
 
@@ -32,14 +34,22 @@ public class InitialDbData {
 		}
 	};
 
+	private final List<SessionType> initSessionTypes = new ArrayList<SessionType>() {
+		{
+			add(new SessionType("default"));
+			add(new SessionType("read"));
+		}
+	};
+
 	private Logger logger = LoggerFactory.getLogger(InitialDbData.class);
 
 	@Autowired
 	private GenderRepository genderRepository;
 	@Autowired
 	private RoleRepository roleRepository;
+	@Autowired
+	private SessionTypeRepository sessionTypeRepository;
 
-	
 	@PostConstruct
 	public void initData() {
 		// Add Initial gender data
@@ -56,5 +66,13 @@ public class InitialDbData {
 				roleRepository.save(role);
 			}
 		}
+
+		for (SessionType sessionType : initSessionTypes) {
+			if (!sessionTypeRepository.existsByDescription(sessionType.getDescription())) {
+				logger.info(String.format("Added session type %s", sessionType.getDescription()));
+				sessionTypeRepository.save(sessionType);
+			}
+		}
+
 	}
 }
