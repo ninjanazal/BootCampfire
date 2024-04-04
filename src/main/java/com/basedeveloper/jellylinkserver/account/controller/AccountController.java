@@ -2,7 +2,6 @@ package com.basedeveloper.jellylinkserver.account.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +67,14 @@ public class AccountController {
 
 		if (bindingResult.hasErrors()) {
 			return ValidationTools.ProcessValidationErrorResponse(bindingResult);
+		}
+
+		try {
+			User validUser = userService.loginUser(loginDto);
+			json.put("message", "logged in");
+		} catch (Exception e) {
+			json.put("message", e.getMessage());
+			return new ResponseEntity<String>(mapper.writeValueAsString(json), HttpStatus.BAD_REQUEST);
 		}
 
 		return new ResponseEntity<String>(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json),

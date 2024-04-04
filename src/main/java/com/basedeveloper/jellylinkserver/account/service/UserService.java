@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.LoginDto;
 import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
 import com.basedeveloper.jellylinkserver.account.entity.Gender;
 import com.basedeveloper.jellylinkserver.account.entity.Role;
@@ -46,7 +47,7 @@ public class UserService implements UserServiceInterface {
 
 		// Validate Role
 		Role userRole = roleRepo.findByDescription(dto.getRole());
-		if(userRole == null){
+		if (userRole == null) {
 			throw new CreationException("Failed to create User, wrong role description");
 		}
 		createdUser.setRole(userRole);
@@ -69,5 +70,16 @@ public class UserService implements UserServiceInterface {
 
 		createdUser = userRepo.save(createdUser);
 		return createdUser;
+	}
+
+	public User loginUser(LoginDto dto) throws AuthException {
+		if (ValidationTools.ValidEmail(dto.getEmail())) {
+			User foundUser = userRepo.findByEmail(dto.getEmail());
+			if (foundUser != null && securityService.ValidateData(dto.getPassword(), foundUser.getHshScrt())) {
+				return foundUser;
+			}
+		}
+
+		throw new AuthException("Failed to authenticate user, password or email invalid");
 	}
 }

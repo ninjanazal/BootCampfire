@@ -40,7 +40,7 @@ public class User {
 	@Column(name = "hashed_password", nullable = false)
 	private String hsh_scrt;
 
-	// region Get/Set
+	// #region Get/Set
 	public Long getId() {
 		return id;
 	}
