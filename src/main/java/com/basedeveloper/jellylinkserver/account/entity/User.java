@@ -1,5 +1,7 @@
 package com.basedeveloper.jellylinkserver.account.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,7 +16,8 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "genderSeq")
+	@GenericGenerator(name = "genderSeq", strategy = "increment")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)

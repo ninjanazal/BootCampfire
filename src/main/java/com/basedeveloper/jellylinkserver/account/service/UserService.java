@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.LoginDto;
 import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
@@ -20,7 +19,6 @@ import com.basedeveloper.jellylinkserver.exceptions.CreationException;
 import com.basedeveloper.jellylinkserver.security.SecurityService;
 
 @Service
-@Transactional
 public class UserService implements UserServiceInterface {
 
 	@Autowired
