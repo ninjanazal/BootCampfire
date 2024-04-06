@@ -1,6 +1,5 @@
 package com.basedeveloper.jellylinkserver.account.entity;
 
-import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +13,7 @@ import jakarta.persistence.Table;
 public class SessionType {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "genderSeq")
-	@GenericGenerator(name = "genderSeq", strategy = "increment")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "description", nullable = false, unique = true)

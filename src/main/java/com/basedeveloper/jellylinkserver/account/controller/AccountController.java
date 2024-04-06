@@ -11,13 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.LoginDto;
 import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
+import com.basedeveloper.jellylinkserver.account.entity.Session;
+import com.basedeveloper.jellylinkserver.account.entity.SessionType;
 import com.basedeveloper.jellylinkserver.account.entity.User;
+import com.basedeveloper.jellylinkserver.account.service.SessionService;
 import com.basedeveloper.jellylinkserver.account.service.UserService;
+import com.basedeveloper.jellylinkserver.account.tools.DateTimeTools;
 import com.basedeveloper.jellylinkserver.account.tools.ValidationTools;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -26,6 +31,9 @@ public class AccountController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	SessionService sessionService;
 
 	@PostMapping("regist")
 	public ResponseEntity<String> regist(@Valid @RequestBody UserDto usr, BindingResult bindingResult)
@@ -44,7 +52,6 @@ public class AccountController {
 
 			ObjectNode userNode = mapper.createObjectNode();
 			userNode.put("name", registed.getName());
-			userNode.put("token", registed.getUserToken());
 			userNode.put("email", registed.getEmail());
 
 			json.set("data", userNode);
@@ -59,7 +66,8 @@ public class AccountController {
 	}
 
 	@PostMapping("login")
-	public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult)
+	public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult,
+			HttpServletRequest httpServletRequest)
 			throws JsonProcessingException {
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -71,7 +79,17 @@ public class AccountController {
 
 		try {
 			User validUser = userService.loginUser(loginDto);
-			json.put("message", "logged in");
+			SessionType sessionType = sessionService.getSessionTypeByDescription(loginDto.getSessionType());
+			Session createdSession = sessionService.createSessionForUser(validUser, sessionType,
+					httpServletRequest.getRemoteAddr());
+
+			json.put("message", String.format("Created %s session", createdSession.getSessionType().getDescription()));
+			ObjectNode sessionData = mapper.createObjectNode();
+			sessionData.put("token", createdSession.getSessionToken());
+			sessionData.put("expiration_date", DateTimeTools.FormatDateToString(createdSession.getExpirationDate()));
+
+			json.set("session", sessionData);
+
 		} catch (Exception e) {
 			json.put("message", e.getMessage());
 			return new ResponseEntity<String>(mapper.writeValueAsString(json), HttpStatus.BAD_REQUEST);

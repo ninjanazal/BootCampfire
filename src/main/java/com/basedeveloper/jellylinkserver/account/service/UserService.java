@@ -52,7 +52,7 @@ public class UserService implements UserServiceInterface {
 
 		// Validate Email
 		if (!ValidationTools.ValidEmail(dto.getEmail()) || userRepo.existsByEmail(dto.getEmail())) {
-			throw new CreationException("Failed to create User, Email allready in use");
+			throw new CreationException("Failed to create User, Email already in use");
 		}
 		createdUser.setEmail(dto.getEmail());
 		createdUser.setHshScrt(securityService.EncodeData(dto.getPassword()));
@@ -60,14 +60,14 @@ public class UserService implements UserServiceInterface {
 		createdUser.setName(dto.getName());
 		createdUser.setAge(dto.getAge());
 
-		String userToken = UUID.randomUUID().toString();
-		while (userRepo.existsByUserToken(userToken)) {
+		String userToken;
+		do {
 			userToken = UUID.randomUUID().toString();
-		}
+		} while (userRepo.existsByUserToken(userToken));
+
 		createdUser.setUserToken(userToken);
 
-		createdUser = userRepo.save(createdUser);
-		return createdUser;
+		return userRepo.save(createdUser);
 	}
 
 	public User loginUser(LoginDto dto) throws AuthException {

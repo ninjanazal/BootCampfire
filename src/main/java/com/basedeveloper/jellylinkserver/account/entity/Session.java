@@ -2,8 +2,6 @@ package com.basedeveloper.jellylinkserver.account.entity;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,19 +17,17 @@ import jakarta.persistence.Table;
 public class Session {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "genderSeq")
-	@GenericGenerator(name = "genderSeq", strategy = "increment")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "session_type_id", nullable = false)
 	private SessionType sessionType;
 
-	@Column(name = "session_token", nullable = false)
+	@Column(name = "user_token", nullable = false)
+	private String userToken;
+
+	@Column(name = "session_token", nullable = false, unique = true)
 	private String sessionToken;
 
 	@Column(name = "user_ip")
@@ -51,12 +47,12 @@ public class Session {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserToken() {
+		return userToken;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserToken(String tkn) {
+		this.userToken = tkn;
 	}
 
 	public SessionType getSessionType() {
