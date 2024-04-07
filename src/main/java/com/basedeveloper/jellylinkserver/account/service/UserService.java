@@ -63,9 +63,9 @@ public class UserService implements UserServiceInterface {
 		String userToken;
 		do {
 			userToken = UUID.randomUUID().toString();
-		} while (userRepo.existsByUserToken(userToken));
+		} while (userRepo.existsById(userToken));
 
-		createdUser.setUserToken(userToken);
+		createdUser.setId(userToken);
 
 		return userRepo.save(createdUser);
 	}

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.basedeveloper"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1-dev"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_21

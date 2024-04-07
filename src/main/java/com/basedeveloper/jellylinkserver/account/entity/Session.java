@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,18 +15,15 @@ import jakarta.persistence.Table;
 public class Session {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "session_type_id", nullable = false)
 	private SessionType sessionType;
 
-	@Column(name = "user_token", nullable = false)
-	private String userToken;
-
-	@Column(name = "session_token", nullable = false, unique = true)
-	private String sessionToken;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "owner_user_id", nullable = false)
+	private User ownerUser;
 
 	@Column(name = "user_ip")
 	private String userIp;
@@ -39,20 +34,20 @@ public class Session {
 
 	
 	// #region Set/Get
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getUserToken() {
-		return userToken;
+	public User getOwnerUser() {
+		return ownerUser;
 	}
 
-	public void setUserToken(String tkn) {
-		this.userToken = tkn;
+	public void setOwnerUser(User user) {
+		this.ownerUser = user;
 	}
 
 	public SessionType getSessionType() {
@@ -63,13 +58,6 @@ public class Session {
 		this.sessionType = sessionType;
 	}
 
-	public String getSessionToken() {
-		return sessionToken;
-	}
-
-	public void setSessionToken(String sessionToken) {
-		this.sessionToken = sessionToken;
-	}
 
 	public String getUserIp() {
 		return userIp;

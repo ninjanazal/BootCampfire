@@ -15,8 +15,7 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "role_id", nullable = false)
@@ -25,9 +24,6 @@ public class User {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gender_id", nullable = false)
 	private Gender gender;
-
-	@Column(name = "user_token", unique = true, nullable = false)
-	private String userToken;
 
 	@Column(name = "email", nullable = false)
 	private String email;
@@ -42,11 +38,11 @@ public class User {
 	private String hsh_scrt;
 
 	// #region Get/Set
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long data) {
+	public void setId(String data) {
 		id = data;
 	}
 
@@ -64,14 +60,6 @@ public class User {
 
 	public void setGender(Gender data) {
 		gender = data;
-	}
-
-	public void setUserToken(String userToken) {
-		this.userToken = userToken;
-	}
-
-	public String getUserToken() {
-		return userToken;
 	}
 
 	public String getEmail() {

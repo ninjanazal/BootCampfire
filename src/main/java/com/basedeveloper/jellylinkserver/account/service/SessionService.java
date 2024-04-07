@@ -1,6 +1,8 @@
 package com.basedeveloper.jellylinkserver.account.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.basedeveloper.jellylinkserver.account.repository.SessionRepository;
 import com.basedeveloper.jellylinkserver.account.repository.SessionTypeRepository;
 import com.basedeveloper.jellylinkserver.account.tools.DateTimeTools;
 import com.basedeveloper.jellylinkserver.exceptions.CreationException;
+import com.basedeveloper.jellylinkserver.exceptions.SearchException;
 import com.basedeveloper.jellylinkserver.security.SecurityService;
 
 @Service
@@ -29,7 +32,7 @@ public class SessionService implements SessionServiceInterface {
 	@Override
 	public Session createSessionForUser(User user, SessionType sessionType, String ipAddress) throws CreationException {
 		Session createSession = new Session();
-		List<Session> userSessions = sessionRepository.findByUserToken(user.getUserToken());
+		List<Session> userSessions = sessionRepository.findByOwnerUser(user);
 
 		for (Session session : userSessions) {
 			if (session.getSessionType().getDescription() == sessionType.getDescription()) {
@@ -37,15 +40,15 @@ public class SessionService implements SessionServiceInterface {
 			}
 		}
 		createSession.setSessionType(sessionType);
-		createSession.setUserToken(user.getUserToken());
+		createSession.setOwnerUser(user);
 		createSession.setUserIp(securityService.AnonymizeIpAddress(ipAddress));
 
 		String sessionToken;
 		do {
 			sessionToken = securityService.GenerateSessionToken();
-		} while (sessionRepository.existsBySessionToken(sessionToken));
+		} while (sessionRepository.existsById(sessionToken));
 
-		createSession.setSessionToken(sessionToken);
+		createSession.setId(sessionToken);
 		createSession.setExpirationDate(DateTimeTools.GenerateExpirationDateFromNow());
 
 		return sessionRepository.save(createSession);
@@ -58,6 +61,30 @@ public class SessionService implements SessionServiceInterface {
 			throw new CreationException("Session type invalid name");
 		}
 		return foundSessionType;
+	}
+
+	@Override
+	public void closeSessionByToken(String token) throws SearchException {
+		Optional<Session> toCloseSession = sessionRepository.findById(token);
+
+		if (toCloseSession.isEmpty()) {
+			throw new SearchException("Session with token not found", token);
+		}
+
+		sessionRepository.delete(toCloseSession.get());
+	}
+
+	@Override
+	public boolean checkIfSessionIsValid(String token) throws SearchException {
+		Optional<Session> toValidateSession = sessionRepository.findById(token);
+		if (toValidateSession.isEmpty()) {
+			throw new SearchException("Session with token not found", token);
+		}
+		LocalDateTime nowDateTime = LocalDateTime.now();
+		if (toValidateSession.get().getExpirationDate().isAfter(nowDateTime)) {
+			return true;
+		}
+		return false;
 	}
 
 }
