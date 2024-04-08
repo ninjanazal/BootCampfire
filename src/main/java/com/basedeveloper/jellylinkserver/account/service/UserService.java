@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.ChangePwdDto;
 import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.LoginDto;
 import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
 import com.basedeveloper.jellylinkserver.account.entity.Gender;
@@ -79,5 +80,15 @@ public class UserService implements UserServiceInterface {
 		}
 
 		throw new AuthException("Failed to authenticate user, password or email invalid");
+	}
+
+	@Override
+	public boolean changeUserPassword(ChangePwdDto changePwdDto, User user) throws AuthException {
+		if (!securityService.ValidateData(changePwdDto.getOldPassword(), user.getHshScrt())) {
+			throw new AuthException("Wrong password, faild to update");
+		}
+		user.setHshScrt(securityService.EncodeData(changePwdDto.getNewPassword()));
+		userRepo.save(user);
+		return true;
 	}
 }

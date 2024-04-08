@@ -32,14 +32,20 @@ public class SecurityService implements SecurityServiceInterface {
 
 		if (lastDotIndex > 0) {
 			// Handle IPv4 addresses
-			return address.substring(0, lastDotIndex) + ".[anonymized]";
+			return address.substring(0, lastDotIndex);
 		} else if (lastColonIndex > 0 && lastColonIndex < address.length() - 1) {
 			// Handle IPv6 addresses (assuming at least 8 colon-separated parts)
-			return address.substring(0, lastColonIndex) + ":[anonymized]";
+			return address.substring(0, lastColonIndex);
 		} else {
 			// Invalid format, return the original address
 			return address;
 		}
+	}
+
+	@Override
+	public boolean ValidateAnonymizedIp(String a, String b) {
+		String bAnonymized = AnonymizeIpAddress(b);
+		return a.equals(bAnonymized);
 	}
 
 	@Override

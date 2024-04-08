@@ -88,13 +88,13 @@ public class SessionController {
 	}
 
 	@GetMapping("/validate")
-	public ResponseEntity<Void> validate(@RequestParam(name = "token", required = true) String token) {
+	public ResponseEntity<Void> validate(@RequestParam(name = "token", required = true) String token, HttpServletRequest httpServletRequest) {
 		if (token == null || token.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 		try {
-			boolean isvalidTime = sessionService.checkIfSessionIsValid(token);
+			boolean isvalidTime = sessionService.checkIfSessionIsValid(token, httpServletRequest.getRemoteAddr());
 			HttpStatus responseCode = HttpStatus.OK;
 			if (!isvalidTime) {
 				responseCode = HttpStatus.UNAUTHORIZED;

@@ -55,6 +55,30 @@ public interface SessionServiceInterface {
 	 * @return True if the session is valid, false otherwise.
 	 * @throws SearchException If an error occurs while searching for the session.
 	 */
-	public boolean checkIfSessionIsValid(String token) throws SearchException;
+	public boolean checkIfSessionIsValid(String token, String requestIp) throws SearchException;
+
+	/**
+	 * Retrieves a Session object representing an active session based on a provided
+	 * token.
+	 *
+	 * @param token The session token associated with the session to retrieve.
+	 * @return The Session object corresponding to the token, if found.
+	 * @throws SearchException If the session cannot be found or retrieved for any
+	 *                         reason.
+	 */
+	public Session getSessionByToken(String token) throws SearchException;
+
+	/**
+	 * Retrieves the User object representing the owner of a session based on a
+	 * provided token.
+	 *
+	 * @param token The session token associated with the session whose owner needs
+	 *              to be fetched.
+	 * @return The User object representing the session's owner, if the session is
+	 *         valid and its owner is found.
+	 * @throws SearchException If the session cannot be found, retrieved, or its
+	 *                         owner cannot be determined.
+	 */
+	public User getSessionOwner(String token) throws SearchException;
 
 }

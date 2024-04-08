@@ -28,6 +28,20 @@ public interface SecurityServiceInterface {
 	public String AnonymizeIpAddress(String address);
 
 	/**
+	 * Validates if the provided string represents a valid anonymized IP address.
+	 *
+	 * The specific implementation of this method depends on the chosen
+	 * anonymization technique (e.g., masking specific octets).
+	 *
+	 * @param ip The string representing the potential anonymized IP address to
+	 *           validate.
+	 * @return True if the IP is considered valid anonymized based on the
+	 *         implementation,
+	 *         false otherwise.
+	 */
+	public boolean ValidateAnonymizedIp(String a, String b);
+
+	/**
 	 * Generates a unique session token as a string.
 	 *
 	 * This method typically uses a cryptographically secure random number generator

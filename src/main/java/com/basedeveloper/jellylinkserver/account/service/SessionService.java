@@ -75,16 +75,37 @@ public class SessionService implements SessionServiceInterface {
 	}
 
 	@Override
-	public boolean checkIfSessionIsValid(String token) throws SearchException {
+	public boolean checkIfSessionIsValid(String token, String requestIp) throws SearchException {
 		Optional<Session> toValidateSession = sessionRepository.findById(token);
 		if (toValidateSession.isEmpty()) {
 			throw new SearchException("Session with token not found", token);
 		}
 		LocalDateTime nowDateTime = LocalDateTime.now();
-		if (toValidateSession.get().getExpirationDate().isAfter(nowDateTime)) {
+		boolean validIp = securityService.ValidateAnonymizedIp(toValidateSession.get().getUserIp(), requestIp);
+		if (toValidateSession.get().getExpirationDate().isAfter(nowDateTime) && validIp) {
 			return true;
 		}
-		return false;
+		throw new SearchException("Invalid Session with token", token);
+	}
+
+	@Override
+	public Session getSessionByToken(String token) throws SearchException {
+		Optional<Session> foundSession = sessionRepository.findById(token);
+		if (foundSession.isEmpty()) {
+			throw new SearchException("Session with token not found", token);
+		}
+
+		return foundSession.get();
+	}
+
+	@Override
+	public User getSessionOwner(String token) throws SearchException {
+		Optional<Session> foundSession = sessionRepository.findById(token);
+		if (foundSession.isEmpty()) {
+			throw new SearchException("Session with token not found", token);
+		}
+
+		return foundSession.get().getOwnerUser();
 	}
 
 }
