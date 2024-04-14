@@ -1,13 +1,13 @@
-package com.basedeveloper.jellylinkserver.account.service;
+package com.basedeveloper.jellylinkserver.account.service.user;
 
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.ChangePwdDto;
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.LoginDto;
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
+import com.basedeveloper.jellylinkserver.account.dto.ChangePwdDto;
+import com.basedeveloper.jellylinkserver.account.dto.CreateUserDto;
+import com.basedeveloper.jellylinkserver.account.dto.LoginDto;
 import com.basedeveloper.jellylinkserver.account.entity.Gender;
 import com.basedeveloper.jellylinkserver.account.entity.Role;
 import com.basedeveloper.jellylinkserver.account.entity.User;
@@ -34,7 +34,7 @@ public class UserService implements UserServiceInterface {
 	@Autowired
 	SecurityService securityService;
 
-	public User registerUser(UserDto dto) throws AuthException {
+	public User registerUser(CreateUserDto dto) throws AuthException {
 		User createdUser = new User();
 
 		// Validate Gender

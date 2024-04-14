@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.ChangePwdDto;
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
+import com.basedeveloper.jellylinkserver.account.dto.ChangePwdDto;
+import com.basedeveloper.jellylinkserver.account.dto.CreateUserDto;
 import com.basedeveloper.jellylinkserver.account.entity.User;
-import com.basedeveloper.jellylinkserver.account.service.SessionService;
-import com.basedeveloper.jellylinkserver.account.service.UserService;
+import com.basedeveloper.jellylinkserver.account.service.session.SessionService;
+import com.basedeveloper.jellylinkserver.account.service.user.UserService;
 import com.basedeveloper.jellylinkserver.account.tools.ValidationTools;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +33,7 @@ public class AccountController {
 	SessionService sessionService;
 
 	@PostMapping("/regist")
-	public ResponseEntity<String> regist(@Valid @RequestBody UserDto usr, BindingResult bindingResult)
+	public ResponseEntity<String> regist(@Valid @RequestBody CreateUserDto usr, BindingResult bindingResult)
 			throws JsonProcessingException {
 
 		ObjectMapper mapper = new ObjectMapper();

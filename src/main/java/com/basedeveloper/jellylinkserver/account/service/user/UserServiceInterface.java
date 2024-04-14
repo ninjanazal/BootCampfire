@@ -1,7 +1,7 @@
-package com.basedeveloper.jellylinkserver.account.service;
+package com.basedeveloper.jellylinkserver.account.service.user;
 
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.ChangePwdDto;
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.UserDto;
+import com.basedeveloper.jellylinkserver.account.dto.ChangePwdDto;
+import com.basedeveloper.jellylinkserver.account.dto.CreateUserDto;
 import com.basedeveloper.jellylinkserver.account.entity.User;
 import com.basedeveloper.jellylinkserver.exceptions.AuthException;
 import com.basedeveloper.jellylinkserver.exceptions.CreationException;
@@ -17,7 +17,7 @@ public interface UserServiceInterface {
 	 * @throws CreationException If any errors occur during user creation, providing
 	 *                           details for handling.
 	 */
-	public User registerUser(UserDto usrdDto) throws CreationException;
+	public User registerUser(CreateUserDto usrdDto) throws CreationException;
 
 	/**
 	 * Changes a user's password while ensuring session validity.

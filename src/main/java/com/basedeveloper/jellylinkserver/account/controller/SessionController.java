@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.basedeveloper.jellylinkserver.account.controller.DataTransferObj.LoginDto;
+import com.basedeveloper.jellylinkserver.account.dto.LoginDto;
 import com.basedeveloper.jellylinkserver.account.entity.Session;
 import com.basedeveloper.jellylinkserver.account.entity.SessionType;
 import com.basedeveloper.jellylinkserver.account.entity.User;
-import com.basedeveloper.jellylinkserver.account.service.SessionService;
-import com.basedeveloper.jellylinkserver.account.service.UserService;
+import com.basedeveloper.jellylinkserver.account.service.session.SessionService;
+import com.basedeveloper.jellylinkserver.account.service.user.UserService;
 import com.basedeveloper.jellylinkserver.account.tools.DateTimeTools;
 import com.basedeveloper.jellylinkserver.account.tools.ValidationTools;
 import com.basedeveloper.jellylinkserver.exceptions.SearchException;

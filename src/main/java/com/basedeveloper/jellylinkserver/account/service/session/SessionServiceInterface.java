@@ -1,4 +1,4 @@
-package com.basedeveloper.jellylinkserver.account.service;
+package com.basedeveloper.jellylinkserver.account.service.session;
 
 import com.basedeveloper.jellylinkserver.account.entity.Session;
 import com.basedeveloper.jellylinkserver.account.entity.SessionType;

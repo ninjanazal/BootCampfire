@@ -1,4 +1,4 @@
-package com.basedeveloper.jellylinkserver.account.service;
+package com.basedeveloper.jellylinkserver.account.service.session;
 
 import java.time.LocalDateTime;
 import java.util.List;

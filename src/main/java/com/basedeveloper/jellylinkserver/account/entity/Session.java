@@ -2,8 +2,12 @@ package com.basedeveloper.jellylinkserver.account.entity;
 
 import java.time.LocalDateTime;
 
+import com.basedeveloper.jellylinkserver.account.constants.SessionConsts;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -17,13 +21,13 @@ public class Session {
 	@Id
 	private String id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "session_type_id", nullable = false)
-	private SessionType sessionType;
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "owner_user_id", nullable = false)
 	private User ownerUser;
+
+	@Column(name = "session_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private SessionConsts.SessionType sessionType;
 
 	@Column(name = "user_ip")
 	private String userIp;
@@ -31,8 +35,6 @@ public class Session {
 	@Column(name = "expiration_date")
 	private LocalDateTime expirationDate;
 
-
-	
 	// #region Set/Get
 	public String getId() {
 		return id;
@@ -50,14 +52,13 @@ public class Session {
 		this.ownerUser = user;
 	}
 
-	public SessionType getSessionType() {
+	public SessionConsts.SessionType getSessionType() {
 		return sessionType;
 	}
 
-	public void setSessionType(SessionType sessionType) {
+	public void setSessionType(SessionConsts.SessionType sessionType) {
 		this.sessionType = sessionType;
 	}
-
 
 	public String getUserIp() {
 		return userIp;
