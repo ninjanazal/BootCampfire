@@ -1,10 +1,9 @@
-package com.basedeveloper.jellylinkserver.account.service;
+package com.basedeveloper.jellylinkserver.account.service.session;
 
 import com.basedeveloper.jellylinkserver.account.entity.Session;
-import com.basedeveloper.jellylinkserver.account.entity.SessionType;
 import com.basedeveloper.jellylinkserver.account.entity.User;
-import com.basedeveloper.jellylinkserver.exceptions.CreationException;
-import com.basedeveloper.jellylinkserver.exceptions.SearchException;
+import com.basedeveloper.jellylinkserver.exceptions.types.CreationException;
+import com.basedeveloper.jellylinkserver.exceptions.types.SearchException;
 
 public interface SessionServiceInterface {
 	/**
@@ -17,18 +16,7 @@ public interface SessionServiceInterface {
 	 * @throws CreationException If an error occurs while creating the session.
 	 * 
 	 */
-	public Session createSessionForUser(User user, SessionType sessionType, String ipAddress) throws CreationException;
-
-	/**
-	 * Retrieves the session type by its descriptive text.
-	 * 
-	 * @param description The textual description of the session type (e.g.,
-	 *                    "Read-only access").
-	 * @return The corresponding session type object.
-	 * @throws SearchException If no session type is found with the given
-	 *                         description.
-	 */
-	public SessionType getSessionTypeByDescription(String description) throws SearchException;
+	public Session createSessionForUser(User user, String sTypeName, String ipAddress) throws CreationException;
 
 	/**
 	 * Closes a session based on the provided session token.

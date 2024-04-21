@@ -1,4 +1,4 @@
-package com.basedeveloper.jellylinkserver.account.controller.DataTransferObj;
+package com.basedeveloper.jellylinkserver.account.dto;
 
 import org.springframework.lang.Nullable;
 

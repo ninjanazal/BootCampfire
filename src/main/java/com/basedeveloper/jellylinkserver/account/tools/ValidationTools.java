@@ -2,6 +2,7 @@ package com.basedeveloper.jellylinkserver.account.tools;
 
 import java.util.regex.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public final class ValidationTools {
+	@Autowired
+
 	public static final String emailRegex = "^[\\w!#$%&'*+/=?^`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^`{|}~-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$";
 
 	public static boolean ValidEmail(String email) {
@@ -24,14 +27,13 @@ public final class ValidationTools {
 	}
 
 	
-	public static ResponseEntity<String> ProcessValidationErrorResponse(BindingResult bindingResult)
+	public static ResponseEntity<String> ProcessValidationErrorResponse(BindingResult bindingResult, ObjectMapper mapper)
 			throws JsonProcessingException {
 
-		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode json = mapper.createObjectNode();
 
 		try {
-			return new ResponseEntity<String>(createValidationErrorResponse(bindingResult),
+			return new ResponseEntity<String>(createValidationErrorResponse(bindingResult, mapper),
 					HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			json.put("message", e.getMessage());
@@ -40,8 +42,7 @@ public final class ValidationTools {
 	}
 
 
-	private static String createValidationErrorResponse(BindingResult bindingResult) throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
+	private static String createValidationErrorResponse(BindingResult bindingResult, ObjectMapper mapper) throws JsonProcessingException {
 		ObjectNode json = mapper.createObjectNode();
 
 		json.put("message", "Validation errors");

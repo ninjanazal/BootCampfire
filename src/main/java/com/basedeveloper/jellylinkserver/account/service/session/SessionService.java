@@ -1,4 +1,4 @@
-package com.basedeveloper.jellylinkserver.account.service;
+package com.basedeveloper.jellylinkserver.account.service.session;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,14 +7,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.basedeveloper.jellylinkserver.account.constants.SessionConsts;
 import com.basedeveloper.jellylinkserver.account.entity.Session;
-import com.basedeveloper.jellylinkserver.account.entity.SessionType;
 import com.basedeveloper.jellylinkserver.account.entity.User;
 import com.basedeveloper.jellylinkserver.account.repository.SessionRepository;
-import com.basedeveloper.jellylinkserver.account.repository.SessionTypeRepository;
 import com.basedeveloper.jellylinkserver.account.tools.DateTimeTools;
-import com.basedeveloper.jellylinkserver.exceptions.CreationException;
-import com.basedeveloper.jellylinkserver.exceptions.SearchException;
+import com.basedeveloper.jellylinkserver.exceptions.types.CreationException;
+import com.basedeveloper.jellylinkserver.exceptions.types.SearchException;
 import com.basedeveloper.jellylinkserver.security.SecurityService;
 
 @Service
@@ -22,24 +21,26 @@ public class SessionService implements SessionServiceInterface {
 
 	@Autowired
 	SessionRepository sessionRepository;
-
-	@Autowired
-	SessionTypeRepository sessionTypeRepository;
-
 	@Autowired
 	SecurityService securityService;
 
 	@Override
-	public Session createSessionForUser(User user, SessionType sessionType, String ipAddress) throws CreationException {
+	public Session createSessionForUser(User user, String sTypeName, String ipAddress) throws CreationException {
 		Session createSession = new Session();
 		List<Session> userSessions = sessionRepository.findByOwnerUser(user);
+		SessionConsts.SessionType sType;
+		try {
+			sType = SessionConsts.SessionType.valueOf(sTypeName.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			throw new CreationException("Failed to parse the session type, wrong session type");
+		}
 
 		for (Session session : userSessions) {
-			if (session.getSessionType().getDescription() == sessionType.getDescription()) {
+			if (session.getSessionType() == sType) {
 				sessionRepository.delete(session);
 			}
 		}
-		createSession.setSessionType(sessionType);
+		createSession.setSessionType(sType);
 		createSession.setOwnerUser(user);
 		createSession.setUserIp(securityService.AnonymizeIpAddress(ipAddress));
 
@@ -52,15 +53,6 @@ public class SessionService implements SessionServiceInterface {
 		createSession.setExpirationDate(DateTimeTools.GenerateExpirationDateFromNow());
 
 		return sessionRepository.save(createSession);
-	}
-
-	@Override
-	public SessionType getSessionTypeByDescription(String description) throws CreationException {
-		SessionType foundSessionType = sessionTypeRepository.findByDescription(description);
-		if (foundSessionType == null) {
-			throw new CreationException("Session type invalid name");
-		}
-		return foundSessionType;
 	}
 
 	@Override

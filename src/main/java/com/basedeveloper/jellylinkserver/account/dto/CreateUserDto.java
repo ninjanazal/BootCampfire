@@ -1,4 +1,4 @@
-package com.basedeveloper.jellylinkserver.account.controller.DataTransferObj;
+package com.basedeveloper.jellylinkserver.account.dto;
 
 import org.springframework.lang.Nullable;
 
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class UserDto {
+public class CreateUserDto {
 	/**
 	 * The user's gender.
 	 * 
