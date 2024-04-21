@@ -11,6 +11,4 @@ public class AccountConsts {
 		ADMIN,
 		DEFAULT
 	}
-
-	
 }

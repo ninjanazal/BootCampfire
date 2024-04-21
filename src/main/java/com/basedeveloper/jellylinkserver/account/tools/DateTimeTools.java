@@ -11,11 +11,11 @@ public final class DateTimeTools {
 		return dateTime.format(DATE_TIME_FORMATTER);
 	}
 
-	public static LocalDateTime ParseStringToDate(String dataString){
+	public static LocalDateTime ParseStringToDate(String dataString) {
 		return LocalDateTime.parse(dataString, DATE_TIME_FORMATTER);
 	}
 
-	public static LocalDateTime GenerateExpirationDateFromNow(){
+	public static LocalDateTime GenerateExpirationDateFromNow() {
 		return LocalDateTime.now().plusHours(SESSIONEXPIRATIONHOURS_INTEGER);
 	}
 }

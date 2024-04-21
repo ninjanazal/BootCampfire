@@ -5,18 +5,15 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.basedeveloper.jellylinkserver.account.constants.AccountConsts;
 import com.basedeveloper.jellylinkserver.account.dto.ChangePwdDto;
 import com.basedeveloper.jellylinkserver.account.dto.CreateUserDto;
 import com.basedeveloper.jellylinkserver.account.dto.LoginDto;
-import com.basedeveloper.jellylinkserver.account.entity.Gender;
-import com.basedeveloper.jellylinkserver.account.entity.Role;
 import com.basedeveloper.jellylinkserver.account.entity.User;
-import com.basedeveloper.jellylinkserver.account.repository.GenderRepository;
-import com.basedeveloper.jellylinkserver.account.repository.RoleRepository;
 import com.basedeveloper.jellylinkserver.account.repository.UserRepository;
 import com.basedeveloper.jellylinkserver.account.tools.ValidationTools;
-import com.basedeveloper.jellylinkserver.exceptions.AuthException;
-import com.basedeveloper.jellylinkserver.exceptions.CreationException;
+import com.basedeveloper.jellylinkserver.exceptions.types.AuthException;
+import com.basedeveloper.jellylinkserver.exceptions.types.CreationException;
 import com.basedeveloper.jellylinkserver.security.SecurityService;
 
 @Service
@@ -26,38 +23,35 @@ public class UserService implements UserServiceInterface {
 	UserRepository userRepo;
 
 	@Autowired
-	GenderRepository genderRepo;
-
-	@Autowired
-	RoleRepository roleRepo;
-
-	@Autowired
 	SecurityService securityService;
 
-	public User registerUser(CreateUserDto dto) throws AuthException {
+	public User registerUser(CreateUserDto dto) throws AuthException, CreationException {
 		User createdUser = new User();
 
-		// Validate Gender
-		Gender userGender = genderRepo.findByDescription(dto.getGender());
-		if (userGender == null) {
+		try {
+			AccountConsts.Gender userGender = AccountConsts.Gender.valueOf(dto.getGender().toUpperCase());
+			createdUser.setGender(userGender);
+		} catch (IllegalArgumentException e) {
 			throw new CreationException("Failed to create User, wrong gender description");
 		}
-		createdUser.setGender(userGender);
 
-		// Validate Role
-		Role userRole = roleRepo.findByDescription(dto.getRole());
-		if (userRole == null) {
+		try {
+			AccountConsts.Role userRole = AccountConsts.Role.valueOf(dto.getRole().toUpperCase());
+			createdUser.setRole(userRole);
+		} catch (IllegalArgumentException e) {
 			throw new CreationException("Failed to create User, wrong role description");
 		}
-		createdUser.setRole(userRole);
 
 		// Validate Email
-		if (!ValidationTools.ValidEmail(dto.getEmail()) || userRepo.existsByEmail(dto.getEmail())) {
-			throw new CreationException("Failed to create User, Email already in use");
+		if (!ValidationTools.ValidEmail(dto.getEmail())) {
+			throw new CreationException("Failed to create User, invalid email format");
 		}
+		if (userRepo.existsByEmail(dto.getEmail())) {
+			throw new CreationException("Failed to create User, email already in use");
+		}
+
 		createdUser.setEmail(dto.getEmail());
 		createdUser.setHshScrt(securityService.EncodeData(dto.getPassword()));
-
 		createdUser.setName(dto.getName());
 		createdUser.setAge(dto.getAge());
 
@@ -65,7 +59,6 @@ public class UserService implements UserServiceInterface {
 		do {
 			userToken = UUID.randomUUID().toString();
 		} while (userRepo.existsById(userToken));
-
 		createdUser.setId(userToken);
 
 		return userRepo.save(createdUser);
@@ -78,7 +71,6 @@ public class UserService implements UserServiceInterface {
 				return foundUser;
 			}
 		}
-
 		throw new AuthException("Failed to authenticate user, password or email invalid");
 	}
 
