@@ -14,6 +14,7 @@ services:
     volumes:
       - account_db_volume:/var/lib/postgresql/data
 
+
   data_db:
     container_name: "postgresql_data_db"
     image: postgres:16.2-alpine3.19
@@ -27,9 +28,20 @@ services:
     volumes:
       - data_db_volume:/var/lib/postgresql/data
 
+
   session_cache:
     container_name: "redis_session_db"
-    iamge: redis:7.2.4
+    image: redis:7.2.4
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - session_db_volume:/data
+    command: redis-server
+      --save 20 1
+      --loglevel warning
+      --requirepass "${REDIS_PASSWORD}"
+
 
   pgadmin:
     container_name: pgadmin4
@@ -43,6 +55,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+
   nginx:
     image: nginx:latest
     restart: unless-stopped
@@ -53,5 +66,6 @@ services:
 
 volumes:
   data_db_volume:
+  session_db_volume:
   account_db_volume:
   pgadmin_data:
