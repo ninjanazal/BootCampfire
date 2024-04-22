@@ -27,6 +27,10 @@ services:
     volumes:
       - data_db_volume:/var/lib/postgresql/data
 
+  session_cache:
+    container_name: "redis_session_db"
+    iamge: redis:7.2.4
+
   pgadmin:
     container_name: pgadmin4
     image: dpage/pgadmin4:latest
