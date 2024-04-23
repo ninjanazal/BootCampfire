@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Session DB (Redis)
+  session_db:
+    container_name: session_redis
+    image: redis:latest
+    restart: unless-stopped
+    # ports:
+    #   - "6379:6379"
+
+  account_db:
+    container_name: account_mongo
+    image: mongo:latest
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+    volumes:
+      - account-data:/data/db
+    # ports:
+    #   - "27017:27017"
+
+volumes:
+  account-data:

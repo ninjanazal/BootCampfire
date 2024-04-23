@@ -49,4 +49,4 @@ gradle-app.setting
 .vscode/
 
 #environment file
-/.env
+*.env
