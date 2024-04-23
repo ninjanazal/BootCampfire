@@ -6,6 +6,8 @@ services:
     container_name: session_redis
     image: redis:latest
     restart: unless-stopped
+    volumes:
+      - sesison-data:/data
     # ports:
     #   - "6379:6379"
 
@@ -18,8 +20,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
     volumes:
       - account-data:/data/db
+      - account-data_config:/data/configdb
     # ports:
     #   - "27017:27017"
 
 volumes:
   account-data:
+  account-data_config:
+
+  sesison-data:
