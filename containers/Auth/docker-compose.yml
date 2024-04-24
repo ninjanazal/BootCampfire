@@ -1,31 +1,29 @@
 version: '3.8'
 
 services:
-  # Session DB (Redis)
-  session_db:
-    container_name: session_redis
-    image: redis:latest
+  # Cache DB (Redis)
+  cache_db:
+    container_name: cache_redis
+    image: redis:7.2.4-alpine
     restart: unless-stopped
     volumes:
-      - sesison-data:/data
-    # ports:
-    #   - "6379:6379"
+      - cache-data:/data
 
-  account_db:
-    container_name: account_mongo
+  auth_db:
+    container_name: auth_mongo
     image: mongo:latest
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+    ports:
+      - "27017:27017"
     volumes:
-      - account-data:/data/db
-      - account-data_config:/data/configdb
-    # ports:
-    #   - "27017:27017"
+      - auth-data:/data/db
+      - auth-data_config:/data/configdb
 
 volumes:
-  account-data:
-  account-data_config:
+  auth-data:
+  auth-data_config:
 
-  sesison-data:
+  cache-data:
