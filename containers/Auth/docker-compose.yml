@@ -14,13 +14,19 @@ services:
     image: mongo:latest
     restart: unless-stopped
     environment:
+      MONGO_INITDB_DATABASE: auth_data
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+
+      MONGO_AUTH_NAME: ${MONGO_AUTH_NAME}
+      MONGO_AUTH_USER: ${MONGO_AUTH_USER}
+      MONGO_AUTH_PASSWORD: ${MONGO_AUTH_PASSWORD}
     ports:
       - "27017:27017"
     volumes:
       - auth-data:/data/db
       - auth-data_config:/data/configdb
+      - ./start/:/docker-entrypoint-initdb.d/:ro
 
 volumes:
   auth-data:

@@ -16,10 +16,18 @@ repositories {
 }
 
 dependencies {
+	annotationProcessor("org.projectlombok:lombok")
+
+	implementation("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+	
+	implementation("org.springframework.security:spring-security-core")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+
 	implementation("org.springframework.boot:spring-boot-starter-web")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 }
