@@ -22,7 +22,6 @@ public class UserService implements IUserService {
 	private SecurityService securityService;
 
 	@Override
-	@SuppressWarnings("null")
 	public User registerUser(CreateUserdto usrdDto) throws AuthException {
 		User result = new User();
 
@@ -47,8 +46,8 @@ public class UserService implements IUserService {
 
 	@Override
 	public boolean changeUserPassword(CreateUserdto changePwdDto, User usr) throws AuthException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'changeUserPassword'");
+		return true;
+
 	}
 
 }
