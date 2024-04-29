@@ -12,7 +12,7 @@ import com.dev.authservice.constants.user.Role;
 import lombok.Data;
 
 @Data
-@Document
+@Document(collection = "users")
 public class User {
 	@Id
 	private UUID id;
