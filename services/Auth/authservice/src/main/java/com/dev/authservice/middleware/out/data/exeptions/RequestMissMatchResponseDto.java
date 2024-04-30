@@ -2,7 +2,6 @@ package com.dev.authservice.middleware.out.data.exeptions;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
@@ -16,13 +15,13 @@ public class RequestMissMatchResponseDto implements ResponseDto {
 	/**
 	 * It provides an ObjectMapper instance for converting objects to JSON format.
 	 */
-	@Autowired
-	private ObjectMapper mapper;
+	private final ObjectMapper mapper;
 
 	List<FieldError> errors;
 	String mString;
 
-	public RequestMissMatchResponseDto(List<FieldError> errors, String mString) {
+	public RequestMissMatchResponseDto(ObjectMapper mapper, List<FieldError> errors, String mString) {
+		this.mapper = mapper;
 		this.errors = errors;
 		this.mString = mString;
 	}

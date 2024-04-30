@@ -1,6 +1,5 @@
 package com.dev.authservice.middleware.out.data;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,8 +14,7 @@ public class GenericResponseDto implements ResponseDto {
 	/**
 	 * It provides an ObjectMapper instance for converting objects to JSON format.
 	 */
-	@Autowired
-	private ObjectMapper mapper;
+	private final ObjectMapper mapper;
 
 	/**
 	 * This field stores a message associated with the response.
@@ -34,7 +32,8 @@ public class GenericResponseDto implements ResponseDto {
 	 * @param msg  The message to be included in the response.
 	 * @param code The HTTP status code for the response.
 	 */
-	public GenericResponseDto(String msg, HttpStatus code) {
+	public GenericResponseDto(ObjectMapper mapper, String msg, HttpStatus code) {
+		this.mapper = mapper;
 		this.msg = msg;
 		this.code = code;
 	}

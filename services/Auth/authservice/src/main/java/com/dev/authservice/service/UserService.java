@@ -29,7 +29,7 @@ public class UserService implements IUserService {
 			throw new AuthException(String.format("Failed to validade %s", usrdDto.getEmail()));
 		}
 		if (userRepository.existsByEmail(usrdDto.getEmail())) {
-			throw new AuthException(String.format("#mail already in use %s", usrdDto.getEmail()));
+			throw new AuthException(String.format("email already in use %s", usrdDto.getEmail()));
 
 		}
 
@@ -39,9 +39,8 @@ public class UserService implements IUserService {
 		result.setHsh_scrt(securityService.EncodeData(usrdDto.getPassword()));
 		result.setName(usrdDto.getName());
 		result.setAge(usrdDto.getAge());
-		
-		// return userRepository.insert(result);
-		return result;
+
+		return userRepository.insert(result);
 	}
 
 	@Override

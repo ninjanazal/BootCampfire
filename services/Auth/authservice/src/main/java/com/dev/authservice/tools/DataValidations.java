@@ -2,14 +2,9 @@ package com.dev.authservice.tools;
 
 import java.util.regex.*;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
 
 public final class DataValidations {
 	// Pre-compiled regular expression pattern for efficient email address
@@ -44,5 +39,11 @@ public final class DataValidations {
 		return emailPattern.matcher(email).matches();
 	}
 
+	public static void ProcessBindingResults(BindingResult bindingResult, String exeptionString)
+			throws RequestMissMatchExeption {
+		if (bindingResult.hasErrors()) {
+			throw new RequestMissMatchExeption(bindingResult, exeptionString);
+		}
+	}
 
 }

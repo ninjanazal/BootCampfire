@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dev.authservice.entity.User;
+import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
 import com.dev.authservice.middleware.inc.data.CreateUserdto;
-import com.dev.authservice.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.dev.authservice.middleware.out.RenponseHandlerService;
+import com.dev.authservice.middleware.out.data.GenericResponseDto;
+import com.dev.authservice.service.IUserService;
+import com.dev.authservice.tools.DataValidations;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
@@ -20,15 +23,28 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
-	// @Autowired
-	// private UserService userService;
+	@Autowired
+	private ObjectMapper mapper;
+	/**
+	 * This field is injected using the `@Autowired` annotation (assuming Spring
+	 * framework).
+	 * The `RenponseHandlerService` likely provides utility methods for building
+	 * response objects.
+	 */
+	@Autowired
+	private RenponseHandlerService responseService;
+
+	@Autowired
+	private IUserService userService;
 
 	@PostMapping("/regist")
 	public ResponseEntity<String> regist(@Valid @RequestBody CreateUserdto usr, BindingResult bindingResult)
-			throws JsonProcessingException, AuthException {
+			throws RequestMissMatchExeption, AuthException {
 
-		// User result = userService.registerUser(usr);
-		return new ResponseEntity<>("", HttpStatus.OK);
+		DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/auth/regist}");
+		userService.registerUser(usr);
+
+		return responseService.createJsonResponse(new GenericResponseDto(mapper, "User registed", HttpStatus.CREATED));
 	}
 
 }
