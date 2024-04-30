@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
 import com.dev.authservice.middleware.out.data.GenericResponseDto;
+import com.dev.authservice.middleware.out.data.exeptions.RequestMissMatchResponseDto;
 
 @ControllerAdvice
 public class ExceptionController extends ResponseEntityExceptionHandler {
@@ -22,4 +24,11 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 		return responseService.createResponse(
 				new GenericResponseDto("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
 	}
+
+	@ExceptionHandler(RequestMissMatchExeption.class)
+	public ResponseEntity<String> handleRequestMissMatch(RequestMissMatchExeption exeption) {
+		return responseService.createResponse(
+				new RequestMissMatchResponseDto(exeption.getBindingResult().getFieldErrors(), exeption.getMessage()));
+	}
+
 }

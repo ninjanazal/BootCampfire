@@ -44,42 +44,5 @@ public final class DataValidations {
 		return emailPattern.matcher(email).matches();
 	}
 
-	// public static ResponseEntity<String>
-	// ProcessValidationErrorResponse(BindingResult bindingResult, ObjectMapper
-	// mapper)
-	// throws JsonProcessingException {
-
-	// ObjectNode json = mapper.createObjectNode();
-
-	// try {
-	// return new
-	// ResponseEntity<String>(createValidationErrorResponse(bindingResult, mapper),
-	// HttpStatus.BAD_REQUEST);
-	// } catch (Exception e) {
-	// json.put("message", e.getMessage());
-	// return new ResponseEntity<String>(mapper.writeValueAsString(json),
-	// HttpStatus.BAD_REQUEST);
-	// }
-	// }
-
-	// private static String createValidationErrorResponse(BindingResult
-	// bindingResult, ObjectMapper mapper)
-	// throws JsonProcessingException {
-	// ObjectNode json = mapper.createObjectNode();
-
-	// json.put("message", "Validation errors");
-	// ArrayNode errors = mapper.createArrayNode();
-
-	// bindingResult.getFieldErrors().forEach(error -> {
-	// ObjectNode errorNode = mapper.createObjectNode();
-
-	// errorNode.put("field", error.getField());
-	// errorNode.put("message", error.getDefaultMessage());
-
-	// errors.add(errorNode);
-	// });
-	// json.set("errors", errors);
-	// return mapper.writeValueAsString(json);
-	// }
 
 }
