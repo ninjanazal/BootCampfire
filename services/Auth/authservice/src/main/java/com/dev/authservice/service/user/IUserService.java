@@ -1,8 +1,8 @@
-package com.dev.authservice.service;
+package com.dev.authservice.service.user;
 
 import jakarta.security.auth.message.AuthException;
 import com.dev.authservice.entity.User;
-import com.dev.authservice.middleware.inc.data.CreateUserdto;
+import com.dev.authservice.middleware.inc.account.CreateUserDto;
 
 public interface IUserService {
 	/**
@@ -13,7 +13,7 @@ public interface IUserService {
 	 * @return The newly created User object, fully populated with data upon
 	 *         successful registration.
 	*/
-	public User registerUser(CreateUserdto usrdDto) throws AuthException;
+	public User registerUser(CreateUserDto usrdDto) throws AuthException;
 
 	/**
 	 * Changes a user's password while ensuring session validity.
@@ -23,5 +23,5 @@ public interface IUserService {
 	 * @param User         The user's current.
 	 * @return True if the password change is successful, false otherwise.
 	 */
-	public boolean changeUserPassword(CreateUserdto changePwdDto, User usr) throws AuthException;
+	public boolean changeUserPassword(CreateUserDto changePwdDto, User usr) throws AuthException;
 }

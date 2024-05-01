@@ -1,7 +1,6 @@
 package com.dev.authservice.entity;
 
-import java.util.UUID;
-
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,18 +14,12 @@ import lombok.Data;
 @Document(collection = "users")
 public class User {
 	@Id
-	private UUID id;
-
+	private ObjectId id;
 	private Role role;
-
 	private Gender gender;
-
 	@Indexed(unique = true)
 	private String email;
-
 	private String name;
-
 	private Integer age;
-
 	private String hsh_scrt;
 }

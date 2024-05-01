@@ -1,4 +1,4 @@
-package com.dev.authservice.middleware.inc.data;
+package com.dev.authservice.middleware.inc.account;
 
 import org.springframework.lang.Nullable;
 
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CreateUserdto {
+public class CreateUserDto {
 	/**
 	 * The user's gender.
 	 * 

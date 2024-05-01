@@ -1,7 +1,7 @@
 package com.dev.authservice.repository;
 
-import java.util.UUID;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.dev.authservice.entity.User;
@@ -14,7 +14,7 @@ import com.dev.authservice.entity.User;
  * a MongoDB collection named after the entity class (`User` in this case).
  * It uses the entity's identifier type (`String` here) for record lookup.
  */
-public interface IUserRepository extends MongoRepository<User, UUID> {
+public interface IUserRepository extends MongoRepository<User, ObjectId> {
 	/**
 	 * This method checks if a user exists in the repository based on their email
 	 * address.
