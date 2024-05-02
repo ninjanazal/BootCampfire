@@ -2,19 +2,20 @@ package com.dev.authservice.service.session;
 
 import com.dev.authservice.entity.Session;
 import com.dev.authservice.entity.User;
+import com.dev.authservice.exeptions.types.SessionException;
 
 public interface ISessionService {
 	/**
 	 * Creates a new session for the given user with the specified session type.
 	 * 
-	 * @param user        The user for whom the session is being created.
+	 * @param userId	    The userid for whom the session is being created.
 	 * @param sessionType The type of session to create
 	 * @param ipAddress   The ip of the session owner
 	 * @return The newly created session object.
 	 * @throws CreationException If an error occurs while creating the session.
 	 * 
 	 */
-	public Session createSessionForUser(User user, String sTypeName, String ipAddress);
+	public Session createSessionForUser(String userId, String sTypeName, String ipAddress) throws SessionException;
 
 	/**
 	 * Closes a session based on the provided session token.

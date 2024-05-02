@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
+import com.dev.authservice.exeptions.types.SessionException;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
 import com.dev.authservice.middleware.out.data.GenericResponseDto;
 import com.dev.authservice.middleware.out.data.exeptions.RequestMissMatchResponseDto;
@@ -65,7 +66,14 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(RequestMissMatchExeption.class)
 	public ResponseEntity<String> handleRequestMissMatch(RequestMissMatchExeption exeption) {
 		return responseService.createJsonResponse(
-				new RequestMissMatchResponseDto(mapper, exeption.getBindingResult().getFieldErrors(), exeption.getMessage()));
+				new RequestMissMatchResponseDto(mapper, exeption.getBindingResult().getFieldErrors(),
+						exeption.getMessage()));
+	}
+
+	
+	public ResponseEntity<String> handleSessionExeption(SessionException exception) {
+		return responseService.createJsonResponse(
+				new GenericResponseDto(mapper, exception.getMessage(), exception.getHttpStatus()));
 	}
 
 }

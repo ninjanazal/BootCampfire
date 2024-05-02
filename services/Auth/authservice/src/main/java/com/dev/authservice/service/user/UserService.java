@@ -58,14 +58,21 @@ public class UserService implements IUserService {
 			throw new AuthException(String.format("email already in use %s", usrdDto.getEmail()));
 		}
 
-		result.setGender(Gender.valueOf(usrdDto.getGender().toUpperCase()));
-		result.setRole(Role.valueOf(usrdDto.getRole().toUpperCase()));
+		try {
+			result.setGender(Gender.valueOf(usrdDto.getGender().toUpperCase()));
+			result.setRole(Role.valueOf(usrdDto.getRole().toUpperCase()));
+		} catch (IllegalArgumentException exception) {
+			throw new AuthException(String.format("Wrong value for the Gender or the Role @ %s ; %s",
+					usrdDto.getGender(),
+					usrdDto.getRole()));
+		}
+
 		result.setEmail(usrdDto.getEmail());
 		result.setHsh_scrt(securityService.EncodeData(usrdDto.getPassword()));
 		result.setName(usrdDto.getName());
 		result.setAge(usrdDto.getAge());
 
-		return userRepository.insert(result);
+		return userRepository.save(result);
 	}
 
 	@Override
