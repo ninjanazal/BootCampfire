@@ -1,6 +1,8 @@
 package com.dev.authservice.repository;
 
 
+import java.util.Optional;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -30,6 +32,6 @@ public interface IUserRepository extends MongoRepository<User, ObjectId> {
 	 * @param email The email address to search for.
 	 * @return The `User` object if found, null otherwise.
 	 */
-	User findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
 }

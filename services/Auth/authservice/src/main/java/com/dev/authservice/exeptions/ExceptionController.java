@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
-import com.dev.authservice.exeptions.types.SessionException;
+import com.dev.authservice.exeptions.types.BadSessionException;
+import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
 import com.dev.authservice.middleware.out.data.GenericResponseDto;
 import com.dev.authservice.middleware.out.data.exeptions.RequestMissMatchResponseDto;
@@ -70,8 +71,15 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 						exeption.getMessage()));
 	}
 
-	
-	public ResponseEntity<String> handleSessionExeption(SessionException exception) {
+
+	@ExceptionHandler(InvalidDataException.class)
+	public ResponseEntity<String> handleInvalidDataException(InvalidDataException exception) {
+		return responseService.createJsonResponse(
+				new GenericResponseDto(mapper, exception.getMessage(), exception.getHttpStatus()));
+	}
+
+	@ExceptionHandler(BadSessionException.class)
+	public ResponseEntity<String> handleBadSessionExeption(BadSessionException exception) {
 		return responseService.createJsonResponse(
 				new GenericResponseDto(mapper, exception.getMessage(), exception.getHttpStatus()));
 	}

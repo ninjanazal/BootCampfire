@@ -1,11 +1,15 @@
 package com.dev.authservice.service.user;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.dev.authservice.constants.user.Gender;
 import com.dev.authservice.constants.user.Role;
 import com.dev.authservice.entity.User;
+import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.middleware.inc.account.CreateUserDto;
 import com.dev.authservice.repository.IUserRepository;
 import com.dev.authservice.security.SecurityService;
@@ -48,23 +52,26 @@ public class UserService implements IUserService {
 	 *                       or other issues.
 	 */
 	@Override
-	public User registerUser(CreateUserDto usrdDto) throws AuthException {
+	public User registerUser(CreateUserDto usrdDto) throws InvalidDataException {
 		User result = new User();
 
 		if (!DataValidations.ValidEmail(usrdDto.getEmail())) {
-			throw new AuthException(String.format("Failed to validade %s", usrdDto.getEmail()));
+			throw new InvalidDataException(String.format("Failed to validade %s", usrdDto.getEmail()),
+					HttpStatus.BAD_REQUEST);
 		}
 		if (userRepository.existsByEmail(usrdDto.getEmail())) {
-			throw new AuthException(String.format("email already in use %s", usrdDto.getEmail()));
+			throw new InvalidDataException(String.format("email already in use %s", usrdDto.getEmail()),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		try {
 			result.setGender(Gender.valueOf(usrdDto.getGender().toUpperCase()));
 			result.setRole(Role.valueOf(usrdDto.getRole().toUpperCase()));
 		} catch (IllegalArgumentException exception) {
-			throw new AuthException(String.format("Wrong value for the Gender or the Role @ %s ; %s",
+			throw new InvalidDataException(String.format("Wrong value for the Gender or the Role @ %s ; %s",
 					usrdDto.getGender(),
-					usrdDto.getRole()));
+					usrdDto.getRole()),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		result.setEmail(usrdDto.getEmail());
@@ -79,6 +86,16 @@ public class UserService implements IUserService {
 	public boolean changeUserPassword(CreateUserDto changePwdDto, User usr) throws AuthException {
 		return true;
 
+	}
+
+	public User loginUser(String usrEmail, String usrPwd) throws AuthException {
+		if (DataValidations.ValidEmail(usrEmail)) {
+			Optional<User> fUser = userRepository.findByEmail(usrEmail);
+			if (fUser.isPresent() && securityService.ValidateData(usrPwd, fUser.get().getHsh_scrt())) {
+				return fUser.get();
+			}
+		}
+		throw new AuthException(String.format("Failed to authenticate user [%s]", usrEmail));
 	}
 
 }

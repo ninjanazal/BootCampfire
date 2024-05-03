@@ -9,12 +9,12 @@ import com.dev.authservice.entity.Session;
 
 public interface ISessionRepository extends MongoRepository<Session, ObjectId> {
 	/**
-	 * Finds all sessions associated with a specific user
+	 * Finds all sessions associated with a specific userId
 	 *
 	 * @param user The user to search for
 	 * @return Result list.
 	 */
-	List<Session> findByOwnerUser(String userid);
+	List<Session> findByOwnerUserId(String userid);
 
 	/**
 	 * Finds all sessions associated with a specific user ip

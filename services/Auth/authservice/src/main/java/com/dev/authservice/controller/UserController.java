@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.authservice.entity.User;
+import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
-import com.dev.authservice.middleware.inc.account.ChangePwdDto;
 import com.dev.authservice.middleware.inc.account.CreateUserDto;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
 import com.dev.authservice.middleware.out.data.responses.RegistUserResponseDto;
@@ -55,7 +55,7 @@ public class UserController {
 	 */
 	@PostMapping("/regist")
 	public ResponseEntity<String> regist(@Valid @RequestBody CreateUserDto dto, BindingResult bindingResult)
-			throws RequestMissMatchExeption, AuthException {
+			throws RequestMissMatchExeption, InvalidDataException {
 
 		DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/auth/regist}");
 		User value = userService.registerUser(dto);

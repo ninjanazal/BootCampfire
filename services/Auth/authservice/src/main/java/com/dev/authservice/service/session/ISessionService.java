@@ -2,7 +2,7 @@ package com.dev.authservice.service.session;
 
 import com.dev.authservice.entity.Session;
 import com.dev.authservice.entity.User;
-import com.dev.authservice.exeptions.types.SessionException;
+import com.dev.authservice.exeptions.types.BadSessionException;
 
 public interface ISessionService {
 	/**
@@ -15,7 +15,7 @@ public interface ISessionService {
 	 * @throws CreationException If an error occurs while creating the session.
 	 * 
 	 */
-	public Session createSessionForUser(String userId, String sTypeName, String ipAddress) throws SessionException;
+	public Session createSessionForUser(String userId, String sTypeName, String ipAddress) throws BadSessionException;
 
 	/**
 	 * Closes a session based on the provided session token.

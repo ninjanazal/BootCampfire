@@ -40,7 +40,7 @@ public class RegistUserResponseDto implements ResponseDto {
 
 	@Override
 	public HttpStatus getCode() {
-		return HttpStatus.CREATED;
+		return HttpStatus.OK;
 	}
 
 }

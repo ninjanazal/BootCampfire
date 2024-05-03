@@ -2,6 +2,7 @@ package com.dev.authservice.service.user;
 
 import jakarta.security.auth.message.AuthException;
 import com.dev.authservice.entity.User;
+import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.middleware.inc.account.CreateUserDto;
 
 public interface IUserService {
@@ -13,7 +14,7 @@ public interface IUserService {
 	 * @return The newly created User object, fully populated with data upon
 	 *         successful registration.
 	*/
-	public User registerUser(CreateUserDto usrdDto) throws AuthException;
+	public User registerUser(CreateUserDto usrdDto) throws InvalidDataException;
 
 	/**
 	 * Changes a user's password while ensuring session validity.
@@ -24,4 +25,8 @@ public interface IUserService {
 	 * @return True if the password change is successful, false otherwise.
 	 */
 	public boolean changeUserPassword(CreateUserDto changePwdDto, User usr) throws AuthException;
+
+
+
+	public User loginUser(String usrEmail, String usrPwd) throws AuthException;
 }
