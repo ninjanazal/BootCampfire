@@ -39,6 +39,18 @@ public final class DataValidations {
 		return emailPattern.matcher(email).matches();
 	}
 
+	/**
+	 * This static method likely processes validation errors captured in a
+	 * `BindingResult` object.
+	 * It throws a `RequestMissMatchExeption` if there are any validation errors.
+	 * 
+	 * @param bindingResult   The `BindingResult` object containing validation
+	 *                        errors (if any).
+	 * @param exceptionString An optional String to be included in the exception
+	 *                        message of `RequestMissMatchExeption`.
+	 * @throws RequestMissMatchExeption If the `BindingResult` object has validation
+	 *                                  errors.
+	 */
 	public static void ProcessBindingResults(BindingResult bindingResult, String exeptionString)
 			throws RequestMissMatchExeption {
 		if (bindingResult.hasErrors()) {

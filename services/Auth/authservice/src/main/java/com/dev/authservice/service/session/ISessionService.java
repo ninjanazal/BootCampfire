@@ -8,7 +8,7 @@ public interface ISessionService {
 	/**
 	 * Creates a new session for the given user with the specified session type.
 	 * 
-	 * @param userId	    The userid for whom the session is being created.
+	 * @param userId      The userid for whom the session is being created.
 	 * @param sessionType The type of session to create
 	 * @param ipAddress   The ip of the session owner
 	 * @return The newly created session object.
@@ -27,7 +27,7 @@ public interface ISessionService {
 	 * @param token The unique identifier for the session to close.
 	 * @throws SearchException If an error occurs while searching for the session.
 	 */
-	public void closeSessionByToken(String token);
+	public void closeSessionByToken(String token) throws BadSessionException;
 
 	/**
 	 * Checks if a session is valid based on the provided session token.

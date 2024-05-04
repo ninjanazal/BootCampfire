@@ -7,6 +7,7 @@ import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.BadSessionException;
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
 import com.dev.authservice.middleware.inc.session.LoginDto;
+import com.dev.authservice.middleware.inc.session.LogoutDto;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
 import com.dev.authservice.middleware.out.data.responses.LoginUserResponseDto;
 import com.dev.authservice.service.session.ISessionService;
@@ -24,18 +25,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/session")
 public class SessionController {
 	@Autowired
 	private ObjectMapper mapper;
-	/**
-	 * This field is injected using the `@Autowired` annotation (assuming Spring
-	 * framework).
-	 * The `RenponseHandlerService` likely provides utility methods for building
-	 * response objects.
-	 */
+
 	@Autowired
 	private RenponseHandlerService responseService;
 
@@ -45,10 +43,27 @@ public class SessionController {
 	@Autowired
 	private IUserService userService;
 
+	/**
+	 * This method handles POST requests to the "/login" endpoint, likely used for
+	 * user login.
+	 *
+	 * @param loginDto           A `@Valid` and `@RequestBody` `LoginDto` object
+	 *                           containing login credentials.
+	 * @param bindingResult      A `BindingResult` object containing any validation
+	 *                           errors from `@Valid`.
+	 * @param httpServletRequest The `HttpServletRequest` object providing access to
+	 *                           request details.
+	 * @return A `ResponseEntity<String>` object representing the HTTP response to
+	 *         the login request.
+	 * @throws RequestMissMatchExeption If there's a request method mismatch (likely
+	 *                                  expecting POST).
+	 * @throws AuthException            If user login fails due to authentication
+	 *                                  issues (e.g., invalid credentials).
+	 * @throws BadSessionException      If an error occurs during session creation.
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult,
 			HttpServletRequest httpServletRequest) throws RequestMissMatchExeption, AuthException, BadSessionException {
-
 		DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/session/login}");
 		User lggedUser = userService.loginUser(loginDto.getEmail(), loginDto.getPassword());
 
@@ -58,5 +73,12 @@ public class SessionController {
 		return responseService.createJsonResponse(
 				new LoginUserResponseDto(mapper, String.format("Session created for %s", lggedUser.getName()),
 						result.getId().toString(), result.getExpirationDate()));
+	}
+
+	@GetMapping("/logout")
+	public ResponseEntity<String> logout(@Valid @RequestParam LogoutDto logoutDto, BindingResult bindingResult)
+			throws RequestMissMatchExeption {
+		DataValidations.ProcessBindingResults(bindingResult, "Invalid querry params @{/api/session/logout}");
+		
 	}
 }

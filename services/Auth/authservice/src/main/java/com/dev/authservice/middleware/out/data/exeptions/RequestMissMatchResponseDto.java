@@ -12,20 +12,40 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class RequestMissMatchResponseDto implements ResponseDto {
-	/**
-	 * It provides an ObjectMapper instance for converting objects to JSON format.
-	 */
-	private final ObjectMapper mapper;
 
+	private final ObjectMapper mapper;
+	/**
+	 * A list of `FieldError` objects containing details about validation errors (if
+	 * any).
+	 */
 	List<FieldError> errors;
+	/**
+	 * A custom message string to be included in the response.
+	 */
 	String mString;
 
+	/**
+	 * Constructor to initialize the object with an `ObjectMapper`, a list of
+	 * `FieldError`s, and a custom message.
+	 *
+	 * @param mapper  The `ObjectMapper` for JSON conversion.
+	 * @param errors  A list of `FieldError` objects representing validation errors
+	 *                (optional).
+	 * @param message A custom message string to be included in the response.
+	 */
 	public RequestMissMatchResponseDto(ObjectMapper mapper, List<FieldError> errors, String mString) {
 		this.mapper = mapper;
 		this.errors = errors;
 		this.mString = mString;
 	}
 
+	/**
+	 * Implements the `toJsonData` method from the `ResponseDto` interface (likely).
+	 * This method converts the object data (message and errors) into a JSON string
+	 * representation.
+	 *
+	 * @return A String containing the JSON representation of the response data.
+	 */
 	@Override
 	public String toJsonData() {
 		ObjectNode json = mapper.createObjectNode();
@@ -50,9 +70,16 @@ public class RequestMissMatchResponseDto implements ResponseDto {
 		}
 	}
 
+	/**
+	 * Implements the `getCode` method from the `ResponseDto` interface (likely).
+	 * This method returns the HTTP status code associated with the response
+	 * (typically BAD_REQUEST for request mismatches).
+	 *
+	 * @return An `HttpStatus` object representing the HTTP status code (BAD_REQUEST
+	 *         in this case).
+	 */
 	@Override
 	public HttpStatus getCode() {
 		return HttpStatus.BAD_REQUEST;
 	}
-
 }

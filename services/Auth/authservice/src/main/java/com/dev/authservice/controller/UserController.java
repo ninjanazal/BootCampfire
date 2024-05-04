@@ -26,12 +26,7 @@ import jakarta.validation.Valid;
 public class UserController {
 	@Autowired
 	private ObjectMapper mapper;
-	/**
-	 * This field is injected using the `@Autowired` annotation (assuming Spring
-	 * framework).
-	 * The `RenponseHandlerService` likely provides utility methods for building
-	 * response objects.
-	 */
+
 	@Autowired
 	private RenponseHandlerService responseService;
 
@@ -64,12 +59,14 @@ public class UserController {
 	}
 
 	// @PostMapping("/changepwd")
-	// public ResponseEntity<String> postMethodName(@Valid @RequestBody ChangePwdDto dto, BindingResult bindingResult)
-	// 		throws RequestMissMatchExeption {
+	// public ResponseEntity<String> postMethodName(@Valid @RequestBody ChangePwdDto
+	// dto, BindingResult bindingResult)
+	// throws RequestMissMatchExeption {
 
-	// 	DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/auth/changepwd}");
+	// DataValidations.ProcessBindingResults(bindingResult, "Invalid request body
+	// @{/api/auth/changepwd}");
 
-	// 	return entity;
+	// return entity;
 	// }
 
 }

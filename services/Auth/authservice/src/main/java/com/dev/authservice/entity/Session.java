@@ -11,7 +11,7 @@ import com.dev.authservice.constants.session.SessionType;
 import lombok.Data;
 
 @Data
-@Document(collation = "sessions")
+@Document(collection = "sessions")
 public class Session {
 	@Id
 	private ObjectId id;

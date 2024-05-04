@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class LoginUserResponseDto implements ResponseDto {
+
 	private final ObjectMapper mapper;
 
 	private String message;
@@ -19,6 +20,16 @@ public class LoginUserResponseDto implements ResponseDto {
 
 	private String expirationDateTime;
 
+	/**
+	 * Constructor to initialize the object with an `ObjectMapper`, a message, a
+	 * token, and a `LocalDateTime` object representing the expiration date/time.
+	 *
+	 * @param mapper  The `ObjectMapper` for JSON conversion.
+	 * @param message A message string to be included in the response.
+	 * @param token   The generated session token.
+	 * @param time    A `LocalDateTime` object representing the session expiration
+	 *                date/time.
+	 */
 	public LoginUserResponseDto(ObjectMapper mapper, String msg, String tkn, LocalDateTime time) {
 		this.mapper = mapper;
 		this.message = msg;
@@ -26,6 +37,13 @@ public class LoginUserResponseDto implements ResponseDto {
 		this.expirationDateTime = DateTimeActions.FormatDateToString(time);
 	}
 
+	/**
+	 * Implements the `toJsonData` method from the `ResponseDto` interface (likely).
+	 * This method converts the object data (message, token, expiration date) into a
+	 * JSON string representation.
+	 *
+	 * @return A String containing the JSON representation of the response data.
+	 */
 	@Override
 	public String toJsonData() {
 		ObjectNode json = mapper.createObjectNode();
@@ -44,6 +62,14 @@ public class LoginUserResponseDto implements ResponseDto {
 		}
 	}
 
+	/**
+	 * Implements the `getCode` method from the `ResponseDto` interface (likely).
+	 * This method returns the HTTP status code associated with the response
+	 * (typically OK for successful login).
+	 *
+	 * @return An `HttpStatus` object representing the HTTP status code (OK in this
+	 *         case).
+	 */
 	@Override
 	public HttpStatus getCode() {
 		return HttpStatus.OK;
