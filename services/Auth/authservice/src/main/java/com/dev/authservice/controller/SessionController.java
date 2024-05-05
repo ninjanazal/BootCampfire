@@ -9,8 +9,10 @@ import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
 import com.dev.authservice.middleware.inc.session.LoginDto;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
+import com.dev.authservice.middleware.out.data.ResponseDto;
 import com.dev.authservice.middleware.out.data.responses.LoginUserResponseDto;
 import com.dev.authservice.middleware.out.data.responses.LogoutUserResponseDto;
+import com.dev.authservice.middleware.out.data.responses.ValidationSesisonResponseDto;
 import com.dev.authservice.service.session.ISessionService;
 import com.dev.authservice.service.user.IUserService;
 import com.dev.authservice.tools.DataValidations;
@@ -21,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -104,5 +107,22 @@ public class SessionController {
 
 		return responseService.createJsonResponse(
 				new LogoutUserResponseDto(mapper, "Logout succecefully", loutUser.getName(), lSession.getType()));
+	}
+
+	@GetMapping("/validate")
+	public ResponseEntity<String> validateSession(
+			@RequestParam(value = "token", required = true) String token)
+			throws BadSessionException {
+
+		Session lSession = sessionService.getSessionByToken(token);
+		boolean isValid = sessionService.isSessionValid(lSession);
+		ValidationSesisonResponseDto sesisonResponseDto = new ValidationSesisonResponseDto(
+				mapper, isValid,
+				isValid ? HttpStatus.OK : HttpStatus.NOT_ACCEPTABLE);
+
+		if (!isValid) {
+			sessionService.closeSessionByToken(lSession.getId().toHexString());
+		}
+		return responseService.createJsonResponse(sesisonResponseDto);
 	}
 }

@@ -34,21 +34,6 @@ public interface ISessionService {
 	public void closeSessionByToken(String token) throws BadSessionException;
 
 	/**
-	 * Checks if a session is valid based on the provided session token.
-	 *
-	 * This method attempts to find a session object in your storage mechanism
-	 * (e.g., database) that matches the given session token. If a matching session
-	 * is found, it verifies its validity based on certain criteria (e.g., not
-	 * expired,
-	 * not marked as invalid).
-	 *
-	 * @param token The unique identifier for the session to check.
-	 * @return True if the session is valid, false otherwise.
-	 * @throws SearchException If an error occurs while searching for the session.
-	 */
-	public boolean checkIfSessionIsValid(String token, String requestIp);
-
-	/**
 	 * Retrieves a Session object representing an active session based on a provided
 	 * token.
 	 *
@@ -71,4 +56,13 @@ public interface ISessionService {
 	 *                              correspond to a valid session, session side.
 	 */
 	public User getSessionOwner(String token) throws InvalidDataException, BadSessionException;
+
+	/**
+	 * This method checks whether a provided `Session` object is currently valid.
+	 *
+	 * @param session The `Session` object to be validated.
+	 * @return True if the session's expiration date is after the current date and
+	 *         time, false otherwise.
+	 */
+	public boolean isSessionValid(Session session);
 }

@@ -1,5 +1,6 @@
 package com.dev.authservice.service.session;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,11 +71,6 @@ public class SessionService implements ISessionService {
 		throw new BadSessionException("Couldnt close session, token not found", HttpStatus.NOT_FOUND);
 	}
 
-	@Override
-	public boolean checkIfSessionIsValid(String token, String requestIp) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'checkIfSessionIsValid'");
-	}
 
 	@Override
 	public Session getSessionByToken(String token) throws BadSessionException {
@@ -98,5 +94,10 @@ public class SessionService implements ISessionService {
 			}
 		}
 		throw new BadSessionException("Not a valid session tokem", HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public boolean isSessionValid(Session session) {
+		return session.getExpirationDate().isAfter(LocalDateTime.now());
 	}
 }
