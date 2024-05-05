@@ -2,6 +2,7 @@ package com.dev.authservice.service.user;
 
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,19 +39,6 @@ public class UserService implements IUserService {
 	@Autowired
 	private SecurityService securityService;
 
-	/**
-	 * This method implements the `registerUser` method from the `IUserService`
-	 * interface.
-	 * It takes a `CreateUserdto` object containing user registration details and
-	 * throws an
-	 * `AuthException` if registration fails.
-	 *
-	 * @param usrdDto The `CreateUserdto` object containing user registration data.
-	 * @return A `User` object representing the newly registered user.
-	 * @throws AuthException If user registration fails due to invalid email,
-	 *                       existing email,
-	 *                       or other issues.
-	 */
 	@Override
 	public User registerUser(CreateUserDto usrdDto) throws InvalidDataException {
 		User result = new User();
@@ -85,9 +73,21 @@ public class UserService implements IUserService {
 	@Override
 	public boolean changeUserPassword(CreateUserDto changePwdDto, User usr) throws AuthException {
 		return true;
-
 	}
 
+	@Override
+	public User getUserByToken(String token) throws InvalidDataException {
+		if (!token.isEmpty()) {
+			Optional<User> result = userRepository.findById(new ObjectId(token));
+			if (result.isPresent()) {
+				return result.get();
+			}
+		}
+
+		throw new InvalidDataException("Not a valid user token", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
 	public User loginUser(String usrEmail, String usrPwd) throws AuthException {
 		if (DataValidations.ValidEmail(usrEmail)) {
 			Optional<User> fUser = userRepository.findByEmail(usrEmail);

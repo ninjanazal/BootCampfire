@@ -39,7 +39,7 @@ public class RegistUserResponseDto implements ResponseDto {
 		json.put("message", "User registed");
 
 		ObjectNode userNode = mapper.createObjectNode();
-		userNode.put("id", user.getId().toString());
+		userNode.put("id", user.getId().toHexString());
 		userNode.put("name", user.getName());
 		userNode.put("email", user.getEmail());
 

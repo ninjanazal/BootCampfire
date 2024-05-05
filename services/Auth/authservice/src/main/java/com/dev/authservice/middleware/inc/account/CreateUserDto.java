@@ -1,7 +1,8 @@
 package com.dev.authservice.middleware.inc.account;
 
-import org.springframework.lang.Nullable;
+import org.springframework.data.mongodb.core.mapping.Unwrapped.Empty;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +26,7 @@ public class CreateUserDto {
 	/**
 	 * The user's role (optional, defaults to "default").
 	 */
+	@Empty(value = "default")
 	@Nullable
 	private String role = "default";
 	/**

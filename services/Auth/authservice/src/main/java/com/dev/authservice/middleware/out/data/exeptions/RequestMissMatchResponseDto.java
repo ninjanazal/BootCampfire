@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class RequestMissMatchResponseDto implements ResponseDto {
 
 	private final ObjectMapper mapper;
@@ -23,21 +26,6 @@ public class RequestMissMatchResponseDto implements ResponseDto {
 	 * A custom message string to be included in the response.
 	 */
 	String mString;
-
-	/**
-	 * Constructor to initialize the object with an `ObjectMapper`, a list of
-	 * `FieldError`s, and a custom message.
-	 *
-	 * @param mapper  The `ObjectMapper` for JSON conversion.
-	 * @param errors  A list of `FieldError` objects representing validation errors
-	 *                (optional).
-	 * @param message A custom message string to be included in the response.
-	 */
-	public RequestMissMatchResponseDto(ObjectMapper mapper, List<FieldError> errors, String mString) {
-		this.mapper = mapper;
-		this.errors = errors;
-		this.mString = mString;
-	}
 
 	/**
 	 * Implements the `toJsonData` method from the `ResponseDto` interface (likely).

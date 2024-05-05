@@ -1,10 +1,14 @@
 package com.dev.authservice.exeptions;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
@@ -71,13 +75,28 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 						exeption.getMessage()));
 	}
 
-
+	/**
+	 * Handles InvalidDataException, which occurs when there's an issue with the
+	 * data provided in the request.
+	 * 
+	 * @param exception The InvalidDataException that was thrown.
+	 * @return A ResponseEntity containing a JSON error response with the exception
+	 *         message and HTTP status code.
+	 */
 	@ExceptionHandler(InvalidDataException.class)
 	public ResponseEntity<String> handleInvalidDataException(InvalidDataException exception) {
 		return responseService.createJsonResponse(
 				new GenericResponseDto(mapper, exception.getMessage(), exception.getHttpStatus()));
 	}
 
+	/**
+	 * Handles BadSessionException, which occurs when there's an issue with the
+	 * user's session (e.g., expired or invalid).
+	 * 
+	 * @param exception The BadSessionException that was thrown.
+	 * @return A ResponseEntity containing a JSON error response with the exception
+	 *         message and HTTP status code.
+	 */
 	@ExceptionHandler(BadSessionException.class)
 	public ResponseEntity<String> handleBadSessionExeption(BadSessionException exception) {
 		return responseService.createJsonResponse(

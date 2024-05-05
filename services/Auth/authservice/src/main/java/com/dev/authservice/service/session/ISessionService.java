@@ -3,29 +3,33 @@ package com.dev.authservice.service.session;
 import com.dev.authservice.entity.Session;
 import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.BadSessionException;
+import com.dev.authservice.exeptions.types.InvalidDataException;
 
 public interface ISessionService {
 	/**
-	 * Creates a new session for the given user with the specified session type.
-	 * 
-	 * @param userId      The userid for whom the session is being created.
-	 * @param sessionType The type of session to create
-	 * @param ipAddress   The ip of the session owner
-	 * @return The newly created session object.
-	 * @throws CreationException If an error occurs while creating the session.
-	 * 
+	 * This method implements the `createSessionForUser` method from the
+	 * `ISessionService` interface.
+	 * It creates a new session for a user and throws a `BadSessionException` if
+	 * something goes wrong.
+	 *
+	 * @param userId    The user ID for whom the session is being created.
+	 * @param sTypeName The type of session as a String (needs to be a valid
+	 *                  `SessionType` enum value).
+	 * @param ipAddress The user's IP address.
+	 * @return A `Session` object representing the newly created session.
+	 * @throws BadSessionException If the session type is invalid or an error occurs
+	 *                             during session creation.
 	 */
 	public Session createSessionForUser(String userId, String sTypeName, String ipAddress) throws BadSessionException;
 
 	/**
-	 * Closes a session based on the provided session token.
+	 * This method closes a user session based on the provided token.
+	 * It throws a `BadSessionException` if the session cannot be found or an error
+	 * occurs during deletion.
 	 *
-	 * This method attempts to find a session object in your storage mechanism
-	 * (e.g., database) that matches the given session token. If a matching session
-	 * is found, it is marked as closed or invalidated.
-	 *
-	 * @param token The unique identifier for the session to close.
-	 * @throws SearchException If an error occurs while searching for the session.
+	 * @param token The session token as a String.
+	 * @throws BadSessionException If the session with the provided token is not
+	 *                             found or cannot be deleted.
 	 */
 	public void closeSessionByToken(String token) throws BadSessionException;
 
@@ -53,18 +57,18 @@ public interface ISessionService {
 	 * @throws SearchException If the session cannot be found or retrieved for any
 	 *                         reason.
 	 */
-	public Session getSessionByToken(String token);
+	public Session getSessionByToken(String token) throws BadSessionException;
 
 	/**
-	 * Retrieves the User object representing the owner of a session based on a
-	 * provided token.
-	 *
-	 * @param token The session token associated with the session whose owner needs
-	 *              to be fetched.
-	 * @return The User object representing the session's owner, if the session is
-	 *         valid and its owner is found.
-	 * @throws SearchException If the session cannot be found, retrieved, or its
-	 *                         owner cannot be determined.
+	 * Retrieves the user associated with a given session token.
+	 * 
+	 * @param token The session token to be used for lookup.
+	 * @return The User object representing the owner of the session, or throws an
+	 *         exception if the token is invalid.
+	 * @throws InvalidDataException Thrown if the provided token is empty or doesn't
+	 *                              correspond to a valid session, user side.
+	 * @throws BadSessionException  Thrown if the provided token is empty or doesn't
+	 *                              correspond to a valid session, session side.
 	 */
-	public User getSessionOwner(String token);
+	public User getSessionOwner(String token) throws InvalidDataException, BadSessionException;
 }

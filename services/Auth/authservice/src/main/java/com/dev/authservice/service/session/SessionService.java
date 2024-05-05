@@ -12,8 +12,10 @@ import com.dev.authservice.constants.session.SessionType;
 import com.dev.authservice.entity.Session;
 import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.BadSessionException;
+import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.repository.ISessionRepository;
 import com.dev.authservice.security.ISecurityService;
+import com.dev.authservice.service.user.IUserService;
 import com.dev.authservice.tools.DateTimeActions;
 
 /**
@@ -29,20 +31,9 @@ public class SessionService implements ISessionService {
 	@Autowired
 	private ISecurityService securityService;
 
-	/**
-	 * This method implements the `createSessionForUser` method from the
-	 * `ISessionService` interface.
-	 * It creates a new session for a user and throws a `BadSessionException` if
-	 * something goes wrong.
-	 *
-	 * @param userId    The user ID for whom the session is being created.
-	 * @param sTypeName The type of session as a String (needs to be a valid
-	 *                  `SessionType` enum value).
-	 * @param ipAddress The user's IP address.
-	 * @return A `Session` object representing the newly created session.
-	 * @throws BadSessionException If the session type is invalid or an error occurs
-	 *                             during session creation.
-	 */
+	@Autowired
+	private IUserService userService;
+
 	@Override
 	public Session createSessionForUser(String userId, String sTypeName, String ipAddress) throws BadSessionException {
 
@@ -74,6 +65,7 @@ public class SessionService implements ISessionService {
 		Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
 		if (fSession.isPresent()) {
 			sessionRepository.delete(fSession.get());
+			return;
 		}
 		throw new BadSessionException("Couldnt close session, token not found", HttpStatus.NOT_FOUND);
 	}
@@ -85,15 +77,26 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
-	public Session getSessionByToken(String token) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getSessionByToken'");
+	public Session getSessionByToken(String token) throws BadSessionException {
+		if (!token.isEmpty()) {
+			Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
+			if (fSession.isPresent()) {
+				return fSession.get();
+			}
+		}
+
+		throw new BadSessionException("Not a valid session tokem", HttpStatus.NOT_FOUND);
 	}
 
 	@Override
-	public User getSessionOwner(String token) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getSessionOwner'");
+	public User getSessionOwner(String token) throws InvalidDataException, BadSessionException {
+		if (!token.isEmpty()) {
+			Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
+			if (fSession.isPresent()) {
+				User result = userService.getUserByToken(fSession.get().getOwnerUserId());
+				return result;
+			}
+		}
+		throw new BadSessionException("Not a valid session tokem", HttpStatus.NOT_FOUND);
 	}
-
 }

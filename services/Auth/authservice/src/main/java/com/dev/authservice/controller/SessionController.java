@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.authservice.entity.Session;
 import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.BadSessionException;
+import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
 import com.dev.authservice.middleware.inc.session.LoginDto;
-import com.dev.authservice.middleware.inc.session.LogoutDto;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
 import com.dev.authservice.middleware.out.data.responses.LoginUserResponseDto;
+import com.dev.authservice.middleware.out.data.responses.LogoutUserResponseDto;
 import com.dev.authservice.service.session.ISessionService;
 import com.dev.authservice.service.user.IUserService;
 import com.dev.authservice.tools.DataValidations;
@@ -64,21 +65,44 @@ public class SessionController {
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult,
 			HttpServletRequest httpServletRequest) throws RequestMissMatchExeption, AuthException, BadSessionException {
-		DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/session/login}");
-		User lggedUser = userService.loginUser(loginDto.getEmail(), loginDto.getPassword());
 
+		DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/session/login}");
+
+		User lggedUser = userService.loginUser(loginDto.getEmail(), loginDto.getPassword());
 		Session result = sessionService.createSessionForUser(lggedUser.getId().toString(), loginDto.getSessionType(),
 				httpServletRequest.getRemoteAddr());
 
-		return responseService.createJsonResponse(
-				new LoginUserResponseDto(mapper, String.format("Session created for %s", lggedUser.getName()),
-						result.getId().toString(), result.getExpirationDate()));
+		return responseService.createJsonResponse(new LoginUserResponseDto(mapper, lggedUser, result));
 	}
 
+	/**
+	 * This method handles user logout requests received through a GET request on
+	 * the "/logout" endpoint.
+	 * It expects a valid `LogoutDto` object containing the user's logout token as a
+	 * query parameter.
+	 * It throws exceptions for various error conditions during logout processing.
+	 *
+	 * @param logoutDto     A `LogoutDto` object containing the logout token (query
+	 *                      parameter).
+	 * @param bindingResult A `BindingResult` object used for parameter validation.
+	 * @return A `ResponseEntity<String>` containing a JSON response with logout
+	 *         status and message.
+	 * @throws RequestMissMatchExeption If the request method (GET) doesn't match
+	 *                                  the expected method.
+	 * @throws InvalidDataException     If the provided logout token is invalid.
+	 * @throws BadSessionException      If an error occurs while closing the user's
+	 *                                  session.
+	 */
 	@GetMapping("/logout")
-	public ResponseEntity<String> logout(@Valid @RequestParam LogoutDto logoutDto, BindingResult bindingResult)
-			throws RequestMissMatchExeption {
-		DataValidations.ProcessBindingResults(bindingResult, "Invalid querry params @{/api/session/logout}");
-		
+	public ResponseEntity<String> logout(
+			@RequestParam(value = "token", required = true) String token)
+			throws RequestMissMatchExeption, InvalidDataException, BadSessionException {
+
+		Session lSession = sessionService.getSessionByToken(token);
+		User loutUser = userService.getUserByToken(lSession.getOwnerUserId());
+		sessionService.closeSessionByToken(lSession.getId().toHexString());
+
+		return responseService.createJsonResponse(
+				new LogoutUserResponseDto(mapper, "Logout succecefully", loutUser.getName(), lSession.getType()));
 	}
 }
