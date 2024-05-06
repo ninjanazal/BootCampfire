@@ -1,7 +1,8 @@
-package com.dev.authservice.middleware.out.data;
+package com.dev.authservice.middleware.out.data.responses;
 
 import org.springframework.http.HttpStatus;
 
+import com.dev.authservice.middleware.out.data.ResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

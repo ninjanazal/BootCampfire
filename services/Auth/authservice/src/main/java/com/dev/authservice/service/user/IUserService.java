@@ -3,6 +3,7 @@ package com.dev.authservice.service.user;
 import jakarta.security.auth.message.AuthException;
 import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.InvalidDataException;
+import com.dev.authservice.middleware.inc.account.ChangePwdDto;
 import com.dev.authservice.middleware.inc.account.CreateUserDto;
 
 public interface IUserService {
@@ -58,15 +59,13 @@ public interface IUserService {
 	 * It throws an `AuthException` if the password change fails due to
 	 * authorization issues.
 	 *
-	 * @param changePwdDto A `CreateUserDto` object likely containing new password
+	 * @param ChangePwdDto A `ChangePwdDto` object likely containing new password
 	 *                     information.
 	 * @param usr          The `User` object for whom the password change is
 	 *                     requested.
-	 * @return A boolean value indicating success (true) or failure (false) of the
-	 *         password change operation.
 	 * @throws AuthException If the password change is not authorized for the
 	 *                       provided user.
 	 */
-	public boolean changeUserPassword(CreateUserDto changePwdDto, User usr) throws AuthException;
+	public User changeUserPassword(ChangePwdDto changePwdDto, User usr) throws AuthException;
 
 }

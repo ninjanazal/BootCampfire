@@ -19,6 +19,8 @@ import com.dev.authservice.security.ISecurityService;
 import com.dev.authservice.service.user.IUserService;
 import com.dev.authservice.tools.DateTimeActions;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 /**
  * This class implements the `ISessionService` interface and provides methods
  * for managing user sessions.
@@ -71,7 +73,6 @@ public class SessionService implements ISessionService {
 		throw new BadSessionException("Couldnt close session, token not found", HttpStatus.NOT_FOUND);
 	}
 
-
 	@Override
 	public Session getSessionByToken(String token) throws BadSessionException {
 		if (!token.isEmpty()) {
@@ -97,7 +98,8 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
-	public boolean isSessionValid(Session session) {
-		return session.getExpirationDate().isAfter(LocalDateTime.now());
+	public boolean isSessionValid(Session session, HttpServletRequest servletRequest) {
+		return session.getExpirationDate().isAfter(LocalDateTime.now())
+				&& securityService.ValidateAnonymizedIp(session.getUserIp(), servletRequest.getRemoteAddr());
 	}
 }

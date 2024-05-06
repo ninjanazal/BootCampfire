@@ -11,6 +11,7 @@ import com.dev.authservice.constants.user.Gender;
 import com.dev.authservice.constants.user.Role;
 import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.InvalidDataException;
+import com.dev.authservice.middleware.inc.account.ChangePwdDto;
 import com.dev.authservice.middleware.inc.account.CreateUserDto;
 import com.dev.authservice.repository.IUserRepository;
 import com.dev.authservice.security.SecurityService;
@@ -24,18 +25,10 @@ import jakarta.security.auth.message.AuthException;
  */
 @Service
 public class UserService implements IUserService {
-	/**
-	 * Injected instance of the `IUserRepository` interface, likely used for
-	 * interacting
-	 * with the user data store (e.g., database).
-	 */
+
 	@Autowired
 	private IUserRepository userRepository;
-	/**
-	 * Injected instance of the `SecurityService`, likely used for password
-	 * encryption
-	 * or other security-related tasks.
-	 */
+
 	@Autowired
 	private SecurityService securityService;
 
@@ -71,8 +64,13 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public boolean changeUserPassword(CreateUserDto changePwdDto, User usr) throws AuthException {
-		return true;
+	public User changeUserPassword(ChangePwdDto changePwdDto, User usr) throws AuthException {
+		if (securityService.ValidateData(changePwdDto.getOldPassword(), usr.getHsh_scrt())) {
+			usr.setHsh_scrt(securityService.EncodeData(changePwdDto.getNewPassword()));
+			return userRepository.save(usr);
+		}
+
+		throw new AuthException("Wrong password");
 	}
 
 	@Override

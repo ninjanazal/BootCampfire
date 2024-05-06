@@ -109,13 +109,28 @@ public class SessionController {
 				new LogoutUserResponseDto(mapper, "Logout succecefully", loutUser.getName(), lSession.getType()));
 	}
 
+	/**
+	 * This method handles session validation requests received through a GET
+	 * request on the "/validate" endpoint.
+	 * It expects a valid token as a required query parameter named "token".
+	 * It throws a `BadSessionException` if an error occurs during session
+	 * retrieval.
+	 *
+	 * @param token The session token as a String retrieved from the "token" query
+	 *              parameter.
+	 * @return A `ResponseEntity<String>` containing a JSON response indicating
+	 *         session validity and status code.
+	 * @throws BadSessionException If an error occurs while retrieving the session
+	 *                             using the provided token.
+	 */
 	@GetMapping("/validate")
 	public ResponseEntity<String> validateSession(
-			@RequestParam(value = "token", required = true) String token)
+			@RequestParam(value = "token", required = true) String token, HttpServletRequest httpServletRequest)
 			throws BadSessionException {
 
 		Session lSession = sessionService.getSessionByToken(token);
-		boolean isValid = sessionService.isSessionValid(lSession);
+		boolean isValid = sessionService.isSessionValid(lSession, httpServletRequest);
+
 		ValidationSesisonResponseDto sesisonResponseDto = new ValidationSesisonResponseDto(
 				mapper, isValid,
 				isValid ? HttpStatus.OK : HttpStatus.NOT_ACCEPTABLE);

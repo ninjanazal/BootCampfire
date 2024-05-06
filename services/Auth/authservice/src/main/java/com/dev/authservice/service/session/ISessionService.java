@@ -5,6 +5,8 @@ import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.BadSessionException;
 import com.dev.authservice.exeptions.types.InvalidDataException;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public interface ISessionService {
 	/**
 	 * This method implements the `createSessionForUser` method from the
@@ -64,5 +66,5 @@ public interface ISessionService {
 	 * @return True if the session's expiration date is after the current date and
 	 *         time, false otherwise.
 	 */
-	public boolean isSessionValid(Session session);
+	public boolean isSessionValid(Session session, HttpServletRequest servletRequest);
 }
