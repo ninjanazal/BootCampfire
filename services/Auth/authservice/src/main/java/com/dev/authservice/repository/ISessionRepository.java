@@ -16,11 +16,4 @@ public interface ISessionRepository extends MongoRepository<Session, ObjectId> {
 	 */
 	List<Session> findByOwnerUserId(String userId);
 
-	/**
-	 * Finds all sessions associated with a specific user ip
-	 * 
-	 * @param userIp The user ip to search for .
-	 * @return Result list.
-	 */
-	List<Session> findByUserIp(String address);
 }

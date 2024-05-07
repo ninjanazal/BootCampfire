@@ -24,7 +24,6 @@ import com.dev.authservice.tools.DataValidations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.security.auth.message.AuthException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -92,14 +91,13 @@ public class UserController {
 	 *                                  authentication or password update.
 	 */
 	@PostMapping("/changepassword")
-	public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePwdDto dto, BindingResult bindingResult,
-			HttpServletRequest servletRequest)
+	public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePwdDto dto, BindingResult bindingResult)
 			throws RequestMissMatchExeption, BadSessionException, InvalidDataException, AuthException {
 
 		DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/auth/regist}");
 
 		Session lSession = sessionService.getSessionByToken(dto.getToken());
-		boolean isValid = sessionService.isSessionValid(lSession, servletRequest);
+		boolean isValid = sessionService.isSessionValid(lSession);
 
 		if (!isValid) {
 			sessionService.closeSessionByToken(lSession.getId().toHexString());

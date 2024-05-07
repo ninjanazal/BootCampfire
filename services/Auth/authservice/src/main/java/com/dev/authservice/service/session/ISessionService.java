@@ -5,7 +5,6 @@ import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.BadSessionException;
 import com.dev.authservice.exeptions.types.InvalidDataException;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 public interface ISessionService {
 	/**
@@ -17,12 +16,11 @@ public interface ISessionService {
 	 * @param userId    The user ID for whom the session is being created.
 	 * @param sTypeName The type of session as a String (needs to be a valid
 	 *                  `SessionType` enum value).
-	 * @param ipAddress The user's IP address.
 	 * @return A `Session` object representing the newly created session.
 	 * @throws BadSessionException If the session type is invalid or an error occurs
 	 *                             during session creation.
 	 */
-	public Session createSessionForUser(String userId, String sTypeName, String ipAddress) throws BadSessionException;
+	public Session createSessionForUser(String userId, String sTypeName) throws BadSessionException;
 
 	/**
 	 * This method closes a user session based on the provided token.
@@ -66,5 +64,5 @@ public interface ISessionService {
 	 * @return True if the session's expiration date is after the current date and
 	 *         time, false otherwise.
 	 */
-	public boolean isSessionValid(Session session, HttpServletRequest servletRequest);
+	public boolean isSessionValid(Session session);
 }

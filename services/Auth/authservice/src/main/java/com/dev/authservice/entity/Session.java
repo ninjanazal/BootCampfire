@@ -1,5 +1,6 @@
 package com.dev.authservice.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.bson.types.ObjectId;
@@ -12,11 +13,10 @@ import lombok.Data;
 
 @Data
 @Document(collection = "sessions")
-public class Session {
+public class Session implements Serializable{
 	@Id
 	private ObjectId id;
 	private String ownerUserId;
-	private String userIp;
 	private LocalDateTime expirationDate;
 	private SessionType type;
 }

@@ -9,7 +9,6 @@ import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.exeptions.types.RequestMissMatchExeption;
 import com.dev.authservice.middleware.inc.session.LoginDto;
 import com.dev.authservice.middleware.out.RenponseHandlerService;
-import com.dev.authservice.middleware.out.data.ResponseDto;
 import com.dev.authservice.middleware.out.data.responses.LoginUserResponseDto;
 import com.dev.authservice.middleware.out.data.responses.LogoutUserResponseDto;
 import com.dev.authservice.middleware.out.data.responses.ValidationSesisonResponseDto;
@@ -19,7 +18,6 @@ import com.dev.authservice.tools.DataValidations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.security.auth.message.AuthException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,14 +64,13 @@ public class SessionController {
 	 * @throws BadSessionException      If an error occurs during session creation.
 	 */
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult,
-			HttpServletRequest httpServletRequest) throws RequestMissMatchExeption, AuthException, BadSessionException {
+	public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult)
+			throws RequestMissMatchExeption, AuthException, BadSessionException {
 
 		DataValidations.ProcessBindingResults(bindingResult, "Invalid request body @{/api/session/login}");
 
 		User lggedUser = userService.loginUser(loginDto.getEmail(), loginDto.getPassword());
-		Session result = sessionService.createSessionForUser(lggedUser.getId().toString(), loginDto.getSessionType(),
-				httpServletRequest.getRemoteAddr());
+		Session result = sessionService.createSessionForUser(lggedUser.getId().toString(), loginDto.getSessionType());
 
 		return responseService.createJsonResponse(new LoginUserResponseDto(mapper, lggedUser, result));
 	}
@@ -125,11 +122,11 @@ public class SessionController {
 	 */
 	@GetMapping("/validate")
 	public ResponseEntity<String> validateSession(
-			@RequestParam(value = "token", required = true) String token, HttpServletRequest httpServletRequest)
+			@RequestParam(value = "token", required = true) String token)
 			throws BadSessionException {
 
 		Session lSession = sessionService.getSessionByToken(token);
-		boolean isValid = sessionService.isSessionValid(lSession, httpServletRequest);
+		boolean isValid = sessionService.isSessionValid(lSession);
 
 		ValidationSesisonResponseDto sesisonResponseDto = new ValidationSesisonResponseDto(
 				mapper, isValid,

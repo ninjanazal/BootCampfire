@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,30 +18,25 @@ import com.dev.authservice.entity.User;
 import com.dev.authservice.exeptions.types.BadSessionException;
 import com.dev.authservice.exeptions.types.InvalidDataException;
 import com.dev.authservice.repository.ISessionRepository;
-import com.dev.authservice.security.ISecurityService;
 import com.dev.authservice.service.user.IUserService;
 import com.dev.authservice.tools.DateTimeActions;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class implements the `ISessionService` interface and provides methods
  * for managing user sessions.
  */
 @Service
+@EnableCaching
 public class SessionService implements ISessionService {
 
 	@Autowired
 	private ISessionRepository sessionRepository;
 
 	@Autowired
-	private ISecurityService securityService;
-
-	@Autowired
 	private IUserService userService;
 
 	@Override
-	public Session createSessionForUser(String userId, String sTypeName, String ipAddress) throws BadSessionException {
+	public Session createSessionForUser(String userId, String sTypeName) throws BadSessionException {
 
 		Session result = new Session();
 
@@ -50,13 +48,12 @@ public class SessionService implements ISessionService {
 		}
 
 		result.setOwnerUserId(userId);
-		result.setUserIp(securityService.AnonymizeIpAddress(ipAddress));
 		result.setExpirationDate(DateTimeActions.GenerateExpirationDateFromNow());
 
 		List<Session> userSessions = sessionRepository.findByOwnerUserId(userId);
 		for (Session s : userSessions) {
 			if (s.getType() == result.getType()) {
-				sessionRepository.delete(s);
+				closeSessionByToken(s.getId().toHexString());
 			}
 		}
 
@@ -64,6 +61,7 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
+	@CacheEvict(cacheNames = "Session", key = "#token")
 	public void closeSessionByToken(String token) throws BadSessionException {
 		Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
 		if (fSession.isPresent()) {
@@ -74,6 +72,7 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
+	@Cacheable(key = "#token", value = "Session")
 	public Session getSessionByToken(String token) throws BadSessionException {
 		if (!token.isEmpty()) {
 			Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
@@ -86,6 +85,7 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
+	@Cacheable(key = "#token", value = "User")
 	public User getSessionOwner(String token) throws InvalidDataException, BadSessionException {
 		if (!token.isEmpty()) {
 			Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
@@ -98,8 +98,7 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
-	public boolean isSessionValid(Session session, HttpServletRequest servletRequest) {
-		return session.getExpirationDate().isAfter(LocalDateTime.now())
-				&& securityService.ValidateAnonymizedIp(session.getUserIp(), servletRequest.getRemoteAddr());
+	public boolean isSessionValid(Session session) {
+		return session.getExpirationDate().isAfter(LocalDateTime.now());
 	}
 }

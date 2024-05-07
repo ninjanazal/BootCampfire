@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ import jakarta.security.auth.message.AuthException;
  * user management.
  */
 @Service
+@EnableCaching
 public class UserService implements IUserService {
 
 	@Autowired
@@ -74,6 +77,7 @@ public class UserService implements IUserService {
 	}
 
 	@Override
+	@Cacheable(key = "#token", value = "User")
 	public User getUserByToken(String token) throws InvalidDataException {
 		if (!token.isEmpty()) {
 			Optional<User> result = userRepository.findById(new ObjectId(token));

@@ -1,7 +1,5 @@
 package com.dev.authservice.middleware.out.data.responses;
 
-import java.time.LocalDateTime;
-
 import org.springframework.http.HttpStatus;
 
 import com.dev.authservice.entity.Session;
