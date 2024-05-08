@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
@@ -35,6 +37,9 @@ public class SessionService implements ISessionService {
 	@Autowired
 	private IUserService userService;
 
+	@Autowired
+	private CacheManager cacheManager;
+
 	@Override
 	public Session createSessionForUser(String userId, String sTypeName) throws BadSessionException {
 
@@ -51,17 +56,27 @@ public class SessionService implements ISessionService {
 		result.setExpirationDate(DateTimeActions.GenerateExpirationDateFromNow());
 
 		List<Session> userSessions = sessionRepository.findByOwnerUserId(userId);
+		Cache sCache = cacheManager.getCache("sessions");
+
 		for (Session s : userSessions) {
 			if (s.getType() == result.getType()) {
-				closeSessionByToken(s.getId().toHexString());
+				if (sCache != null) {
+					sCache.evictIfPresent(s.getId().toHexString());
+				}
+				sessionRepository.delete(s);
 			}
 		}
 
-		return sessionRepository.save(result);
+		result = sessionRepository.save(result);
+
+		if (sCache != null) {
+			sCache.put(result.getId().toHexString(), result);
+		}
+		return result;
 	}
 
 	@Override
-	@CacheEvict(cacheNames = "Session", key = "#token")
+	@CacheEvict(value = "sessions", key = "#token")
 	public void closeSessionByToken(String token) throws BadSessionException {
 		Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
 		if (fSession.isPresent()) {
@@ -72,7 +87,7 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
-	@Cacheable(key = "#token", value = "Session")
+	@Cacheable(value = "sessions", key = "#token")
 	public Session getSessionByToken(String token) throws BadSessionException {
 		if (!token.isEmpty()) {
 			Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
@@ -80,12 +95,11 @@ public class SessionService implements ISessionService {
 				return fSession.get();
 			}
 		}
-
 		throw new BadSessionException("Not a valid session tokem", HttpStatus.NOT_FOUND);
 	}
 
 	@Override
-	@Cacheable(key = "#token", value = "User")
+	@Cacheable(value = "User", key = "#token")
 	public User getSessionOwner(String token) throws InvalidDataException, BadSessionException {
 		if (!token.isEmpty()) {
 			Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
