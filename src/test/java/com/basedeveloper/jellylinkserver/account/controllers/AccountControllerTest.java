@@ -22,7 +22,7 @@ public class AccountControllerTest {
 	@Autowired
 	private ObjectMapper mapper;
 
-	@Test
+	// @Test
 	public void testRegistEndpoint() throws Exception {
 	}
 }

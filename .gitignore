@@ -23,6 +23,7 @@
 hs_err_pid*
 replay_pid*
 
+bin/
 .gradle
 **/build/
 !src/**/build/
@@ -49,4 +50,4 @@ gradle-app.setting
 .vscode/
 
 #environment file
-/.env
+*.env
