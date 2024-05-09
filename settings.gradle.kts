@@ -1,1 +1,1 @@
-rootProject.name = "jellylinkserver"
+rootProject.name = "server"
