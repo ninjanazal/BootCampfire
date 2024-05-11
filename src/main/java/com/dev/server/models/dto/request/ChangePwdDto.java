@@ -1,4 +1,4 @@
-package com.dev.server.middleware.inc.account;
+package com.dev.server.models.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.dev.server.middleware.inc.account;
+package com.dev.server.models.dto.request;
 
 import org.springframework.data.mongodb.core.mapping.Unwrapped.Empty;
 

@@ -2,8 +2,8 @@ package com.dev.server.service.user;
 
 import com.dev.server.entity.User;
 import com.dev.server.exeptions.types.InvalidDataException;
-import com.dev.server.middleware.inc.account.ChangePwdDto;
-import com.dev.server.middleware.inc.account.CreateUserDto;
+import com.dev.server.models.dto.request.ChangePwdDto;
+import com.dev.server.models.dto.request.CreateUserDto;
 
 import jakarta.security.auth.message.AuthException;
 
