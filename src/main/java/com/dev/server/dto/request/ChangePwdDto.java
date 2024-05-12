@@ -1,4 +1,4 @@
-package com.dev.server.models.dto.request;
+package com.dev.server.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

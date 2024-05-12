@@ -1,10 +1,10 @@
-package com.dev.server.models.dto.response;
+package com.dev.server.dto.response;
 
 import org.springframework.http.HttpStatus;
 
+import com.dev.server.dto.ResponseDto;
 import com.dev.server.entity.Session;
 import com.dev.server.entity.User;
-import com.dev.server.models.dto.ResponseDto;
 import com.dev.server.tools.DateTimeActions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

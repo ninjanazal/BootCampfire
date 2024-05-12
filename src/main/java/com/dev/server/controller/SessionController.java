@@ -2,16 +2,16 @@ package com.dev.server.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev.server.dto.request.LoginDto;
+import com.dev.server.dto.response.LoginUserResponseDto;
+import com.dev.server.dto.response.LogoutUserResponseDto;
+import com.dev.server.dto.response.ValidationSesisonResponseDto;
 import com.dev.server.entity.Session;
 import com.dev.server.entity.User;
 import com.dev.server.exeptions.types.BadSessionException;
 import com.dev.server.exeptions.types.InvalidDataException;
 import com.dev.server.exeptions.types.RequestMissMatchExeption;
-import com.dev.server.models.RenponseHandlerService;
-import com.dev.server.models.dto.request.LoginDto;
-import com.dev.server.models.dto.response.LoginUserResponseDto;
-import com.dev.server.models.dto.response.LogoutUserResponseDto;
-import com.dev.server.models.dto.response.ValidationSesisonResponseDto;
+import com.dev.server.service.response.RenponseHandlerService;
 import com.dev.server.service.session.ISessionService;
 import com.dev.server.service.user.IUserService;
 import com.dev.server.tools.DataValidations;

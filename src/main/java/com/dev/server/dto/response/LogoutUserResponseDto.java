@@ -1,9 +1,9 @@
-package com.dev.server.models.dto.response;
+package com.dev.server.dto.response;
 
 import org.springframework.http.HttpStatus;
 
 import com.dev.server.constants.session.SessionType;
-import com.dev.server.models.dto.ResponseDto;
+import com.dev.server.dto.ResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.dev.server.models.dto.exceptions.RequestMissMatchResponseDto;
+import com.dev.server.dto.exceptions.RequestMissMatchResponseDto;
+import com.dev.server.dto.response.GenericResponseDto;
 import com.dev.server.exeptions.types.BadSessionException;
 import com.dev.server.exeptions.types.InvalidDataException;
 import com.dev.server.exeptions.types.RequestMissMatchExeption;
-import com.dev.server.models.RenponseHandlerService;
-import com.dev.server.models.dto.response.GenericResponseDto;
+import com.dev.server.service.response.RenponseHandlerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**

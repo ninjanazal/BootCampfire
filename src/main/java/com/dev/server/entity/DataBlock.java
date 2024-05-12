@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.dev.server.constants.data.DataType;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import lombok.Data;
 
@@ -17,6 +18,5 @@ public class DataBlock {
 	private ObjectId id;
 	private DataType type;
 	private String ownerUserId;
-	private Map<String, Object> data;
-
+	private JsonNode nodeData;
 }

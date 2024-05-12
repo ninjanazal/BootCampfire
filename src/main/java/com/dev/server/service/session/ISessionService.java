@@ -58,6 +58,16 @@ public interface ISessionService {
 	public User getSessionOwner(String token) throws InvalidDataException, BadSessionException;
 
 	/**
+	 * This method checks whether a provided `Session Token` is currently valid.
+	 *
+	 * @param tokken The `token` string to be validated.
+	 * @return True if the session's expiration date is after the current date and
+	 *         time, false otherwise.
+	 */
+	public boolean isTokenValid(String token)throws BadSessionException;
+
+
+	/**
 	 * This method checks whether a provided `Session` object is currently valid.
 	 *
 	 * @param session The `Session` object to be validated.
@@ -65,4 +75,7 @@ public interface ISessionService {
 	 *         time, false otherwise.
 	 */
 	public boolean isSessionValid(Session session);
+
+
+	public void validateSession(String token) throws BadSessionException;
 }

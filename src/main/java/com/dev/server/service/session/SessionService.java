@@ -112,7 +112,25 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
+	public boolean isTokenValid(String token) throws BadSessionException {
+		Session lSession = getSessionByToken(token);
+		return isSessionValid(lSession);
+	}
+
+	@Override
 	public boolean isSessionValid(Session session) {
 		return session.getExpirationDate().isAfter(LocalDateTime.now());
 	}
+
+	public void validateSessionException(String token) throws BadSessionException {
+		boolean isValid = isTokenValid(token);
+		if (isValid) {
+			return;
+		}
+
+		closeSessionByToken(token);
+
+		throw new BadSessionException("Invalid session token", HttpStatus.BAD_REQUEST);
+	}
+
 }

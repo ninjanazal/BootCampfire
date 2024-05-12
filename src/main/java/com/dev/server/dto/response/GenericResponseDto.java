@@ -1,16 +1,19 @@
-package com.dev.server.models.dto.response;
+package com.dev.server.dto.response;
 
 import org.springframework.http.HttpStatus;
 
-import com.dev.server.models.dto.ResponseDto;
+import com.dev.server.dto.ResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import lombok.AllArgsConstructor;
 
 /**
  * This class implements the `ResponseDto` interface and provides a generic
  * structure for response data.
  */
+@AllArgsConstructor
 public class GenericResponseDto implements ResponseDto {
 	/**
 	 * It provides an ObjectMapper instance for converting objects to JSON format.
@@ -26,18 +29,6 @@ public class GenericResponseDto implements ResponseDto {
 	 * This field stores the HTTP status code for the response.
 	 */
 	private HttpStatus code;
-
-	/**
-	 * Constructor for GenericResponseDto.
-	 * 
-	 * @param msg  The message to be included in the response.
-	 * @param code The HTTP status code for the response.
-	 */
-	public GenericResponseDto(ObjectMapper mapper, String msg, HttpStatus code) {
-		this.mapper = mapper;
-		this.msg = msg;
-		this.code = code;
-	}
 
 	/**
 	 * This method overrides the `toJsonData` method from the `ResponseDto`
