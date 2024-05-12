@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev.server.constants.data.DataType;
 import com.dev.server.dto.exceptions.InvalidPayloadResponseDto;
 import com.dev.server.dto.response.GenericResponseDto;
 import com.dev.server.exeptions.types.BadSessionException;
+import com.dev.server.exeptions.types.InvalidDataException;
 import com.dev.server.service.dataBlock.IDataBlockService;
 import com.dev.server.service.response.RenponseHandlerService;
 import com.dev.server.service.session.ISessionService;
@@ -39,18 +41,23 @@ public class DataController {
 	public ResponseEntity<String> postMethodName(
 			@RequestParam(value = "token", required = true) String token,
 			@RequestParam(value = "type", required = true) String type,
-			@RequestBody String payload) throws BadSessionException {
+			@RequestBody String payload) throws BadSessionException, InvalidDataException {
 
 		sessionService.validateSession(token);
 
 		try {
 			JsonNode dataJsonNode = mapper.readTree(payload);
+			DataType dataType = DataType.valueOf(type.toUpperCase());
+			
 
 			return responseService.createJsonResponse(new GenericResponseDto(mapper, "Data updated on", HttpStatus.OK));
 
 		} catch (JsonProcessingException e) {
 			return responseService
 					.createJsonResponse(new InvalidPayloadResponseDto(mapper, "Payload needs to be a valid json object"));
+		} catch (IllegalArgumentException e) {
+			throw new InvalidDataException(String.format("The provided token is invalid %s", token),
+					HttpStatus.BAD_REQUEST);
 		}
 
 	}

@@ -122,15 +122,13 @@ public class SessionService implements ISessionService {
 		return session.getExpirationDate().isAfter(LocalDateTime.now());
 	}
 
-	public void validateSessionException(String token) throws BadSessionException {
+	public void validateSession(String token) throws BadSessionException {
 		boolean isValid = isTokenValid(token);
 		if (isValid) {
 			return;
 		}
-
+		
 		closeSessionByToken(token);
-
 		throw new BadSessionException("Invalid session token", HttpStatus.BAD_REQUEST);
 	}
-
 }
