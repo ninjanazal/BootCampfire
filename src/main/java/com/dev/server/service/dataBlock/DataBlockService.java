@@ -1,5 +1,6 @@
 package com.dev.server.service.dataBlock;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -12,8 +13,10 @@ import com.dev.server.constants.data.DataType;
 import com.dev.server.entity.DataBlock;
 import com.dev.server.entity.User;
 import com.dev.server.repository.IDataBlockRepository;
+import com.dev.server.tools.JsonOperations;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 @Service
 public class DataBlockService implements IDataBlockService {
@@ -33,7 +36,7 @@ public class DataBlockService implements IDataBlockService {
 		for (DataType type : DataType.values()) {
 			DataBlock tBlock = new DataBlock();
 			tBlock.setType(type);
-			tBlock.setNodeData(mapper.createObjectNode());
+			tBlock.setNodeData(mapper.createObjectNode().toString());
 
 			blocks.add(tBlock);
 		}
@@ -51,8 +54,22 @@ public class DataBlockService implements IDataBlockService {
 	}
 
 	@Override
-	public void UpdateData(JsonNode jsonNode, DataType dataType, User user) {
-		DataBlock block = dataRepository.findByOwnerUserIdAndDataType(user.getId().toHexString(), dataType);
-		if(block)
+	public void UpdateData(JsonNode jsonNode, DataType dataType, String userId) throws IOException {
+		Optional<DataBlock> oBlock = dataRepository.findByOwnerUserIdAndType(userId, dataType);
+		DataBlock dBlock;
+		if (!oBlock.isPresent()) {
+			dBlock = new DataBlock();
+
+			dBlock.setType(dataType);
+			dBlock.setOwnerUserId(userId);
+			dBlock.setNodeData(jsonNode.toString());
+
+		} else {
+			dBlock = oBlock.get();
+			JsonNode blockData = mapper.readTree(dBlock.getNodeData());			
+			dBlock.setNodeData(JsonOperations.MergeJsons(blockData, jsonNode).toString());
+		}
+
+		dataRepository.save(dBlock);
 	}
 }

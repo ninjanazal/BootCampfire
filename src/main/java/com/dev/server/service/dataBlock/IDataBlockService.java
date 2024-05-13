@@ -1,5 +1,7 @@
 package com.dev.server.service.dataBlock;
 
+import java.io.IOException;
+
 import java.util.List;
 
 import com.dev.server.constants.data.DataType;
@@ -12,5 +14,5 @@ public interface IDataBlockService {
 
 	public List<DataBlock> getDataByUser(User user);
 
-	public void UpdateData(JsonNode jsonNode, DataType dataType, User user);
+	public void UpdateData(JsonNode jsonNode, DataType dataType, String userId) throws IOException;
 }

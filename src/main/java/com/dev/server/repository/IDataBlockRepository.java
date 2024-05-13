@@ -12,5 +12,5 @@ import com.dev.server.entity.DataBlock;
 public interface IDataBlockRepository extends MongoRepository<DataBlock, ObjectId>{
 	Optional<List<DataBlock>> findByOwnerUserId(String userId);
 
-	DataBlock findByOwnerUserIdAndDataType(String userId, DataType type);
+	Optional<DataBlock> findByOwnerUserIdAndType(String userId, DataType type);
 }

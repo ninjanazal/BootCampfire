@@ -1,5 +1,7 @@
 package com.dev.server.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.server.constants.data.DataType;
 import com.dev.server.dto.exceptions.InvalidPayloadResponseDto;
 import com.dev.server.dto.response.GenericResponseDto;
+import com.dev.server.entity.User;
 import com.dev.server.exeptions.types.BadSessionException;
 import com.dev.server.exeptions.types.InvalidDataException;
 import com.dev.server.service.dataBlock.IDataBlockService;
@@ -41,17 +44,19 @@ public class DataController {
 	public ResponseEntity<String> postMethodName(
 			@RequestParam(value = "token", required = true) String token,
 			@RequestParam(value = "type", required = true) String type,
-			@RequestBody String payload) throws BadSessionException, InvalidDataException {
+			@RequestBody String payload) throws BadSessionException, InvalidDataException, IOException {
 
 		sessionService.validateSession(token);
-
+		User owner = sessionService.getSessionOwner(token);
+		
 		try {
 			JsonNode dataJsonNode = mapper.readTree(payload);
 			DataType dataType = DataType.valueOf(type.toUpperCase());
 			
+			dataBlockService.UpdateData(dataJsonNode, dataType, owner.getId().toHexString());
 
-			return responseService.createJsonResponse(new GenericResponseDto(mapper, "Data updated on", HttpStatus.OK));
-
+			return responseService.createJsonResponse(new GenericResponseDto(mapper, String.format("Data updated on [%s]", dataType.name()), HttpStatus.OK));
+			
 		} catch (JsonProcessingException e) {
 			return responseService
 					.createJsonResponse(new InvalidPayloadResponseDto(mapper, "Payload needs to be a valid json object"));
