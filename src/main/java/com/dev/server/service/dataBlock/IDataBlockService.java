@@ -15,4 +15,6 @@ public interface IDataBlockService {
 	public List<DataBlock> getDataByUser(User user);
 
 	public void UpdateData(JsonNode jsonNode, DataType dataType, String userId) throws IOException;
+
+	public void resetData(String userId,DataType dataType);
 }

@@ -10,25 +10,37 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class InvalidPayloadResponseDto implements ResponseDto{
-		private final ObjectMapper mapper;
+public class InvalidPayloadResponseDto implements ResponseDto {
+	// ObjectMapper for JSON serialization/deserialization.
+	private final ObjectMapper mapper;
 
-		private String message;
+	// The message to be included in the JSON response.
+	private String message;
 
-		@Override
-		public String toJsonData() {
-			ObjectNode json = mapper.createObjectNode();
-			json.put("message", message);
-			try{
-				return mapper.writeValueAsString(json);
-			}catch (JsonProcessingException exception){
-				return exception.getMessage();
-			}
+	/**
+	 * Converts the object to JSON data.
+	 * 
+	 * @return JSON representation of the response data.
+	 */
+	@Override
+	public String toJsonData() {
+		ObjectNode json = mapper.createObjectNode();
+		json.put("message", message);
+		try {
+			return mapper.writeValueAsString(json);
+		} catch (JsonProcessingException exception) {
+			return exception.getMessage();
 		}
+	}
 
-		@Override
-		public HttpStatus getCode() {
-			return HttpStatus.BAD_REQUEST;
-		}
+	/**
+	 * Get the HTTP status code associated with this response.
+	 * 
+	 * @return HTTP status code.
+	 */
+	@Override
+	public HttpStatus getCode() {
+		return HttpStatus.BAD_REQUEST;
+	}
 
 }

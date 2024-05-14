@@ -5,7 +5,6 @@ import com.dev.server.entity.User;
 import com.dev.server.exeptions.types.BadSessionException;
 import com.dev.server.exeptions.types.InvalidDataException;
 
-
 public interface ISessionService {
 	/**
 	 * This method implements the `createSessionForUser` method from the
@@ -64,8 +63,7 @@ public interface ISessionService {
 	 * @return True if the session's expiration date is after the current date and
 	 *         time, false otherwise.
 	 */
-	public boolean isTokenValid(String token)throws BadSessionException;
-
+	public boolean isTokenValid(String token) throws BadSessionException;
 
 	/**
 	 * This method checks whether a provided `Session` object is currently valid.
@@ -76,6 +74,20 @@ public interface ISessionService {
 	 */
 	public boolean isSessionValid(Session session);
 
-
+	/**
+	 * Validates the session associated with the given token.
+	 * 
+	 * @param token The session token to be validated.
+	 * @throws BadSessionException If the session is invalid or expired.
+	 */
 	public void validateSession(String token) throws BadSessionException;
+
+	/**
+	 * Checks if the session associated with the given token allows write
+	 * operations.
+	 * 
+	 * @param token The session token to be checked.
+	 * @throws BadSessionException If the session does not allow write operations.
+	 */
+	public void canSessionWrite(String token) throws BadSessionException;
 }

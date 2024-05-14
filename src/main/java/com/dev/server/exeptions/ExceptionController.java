@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.dev.server.dto.exceptions.InvalidSessionTypeResonseDto;
 import com.dev.server.dto.exceptions.RequestMissMatchResponseDto;
 import com.dev.server.dto.response.GenericResponseDto;
 import com.dev.server.exeptions.types.BadSessionException;
 import com.dev.server.exeptions.types.InvalidDataException;
+import com.dev.server.exeptions.types.InvalidSessionTypeException;
 import com.dev.server.exeptions.types.RequestMissMatchExeption;
 import com.dev.server.service.response.RenponseHandlerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,6 +99,19 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<String> handleBadSessionExeption(BadSessionException exception) {
 		return responseService.createJsonResponse(
 				new GenericResponseDto(mapper, exception.getMessage(), exception.getHttpStatus()));
+	}
+
+	/**
+	 * Handles BadSessionException, which occurs when there's an issue with the
+	 * user's session (e.g., expired or invalid).
+	 * 
+	 * @param exception The BadSessionException that was thrown.
+	 * @return A ResponseEntity containing a JSON error response with the exception
+	 *         message and HTTP status code.
+	 */
+	@ExceptionHandler(InvalidSessionTypeException.class)
+	public ResponseEntity<String> handleInvalidSessionTypeException(InvalidSessionTypeException exception) {
+		return responseService.createJsonResponse(new InvalidSessionTypeResonseDto(mapper, exception.getMessage()));
 	}
 
 }

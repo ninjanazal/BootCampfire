@@ -130,13 +130,21 @@ public class SessionService implements ISessionService {
 		return session.getExpirationDate().isAfter(LocalDateTime.now());
 	}
 
+	@Override
 	public void validateSession(String token) throws BadSessionException {
 		boolean isValid = isTokenValid(token);
 		if (isValid) {
 			return;
 		}
-
 		closeSessionByToken(token);
 		throw new BadSessionException("Invalid session token", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public void canSessionWrite(String token) throws BadSessionException {
+		Session lSession = getSessionByToken(token);
+		if (lSession.getType() == SessionType.READ) {
+			throw new BadSessionException("Read Only session, cant edit data", HttpStatus.BAD_REQUEST);
+		}
 	}
 }
