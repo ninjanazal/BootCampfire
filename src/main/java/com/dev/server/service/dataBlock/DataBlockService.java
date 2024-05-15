@@ -19,9 +19,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DataBlockService implements IDataBlockService {
+	// Autowired ObjectMapper for JSON serialization/deserialization.
 	@Autowired
 	private ObjectMapper mapper;
 
+	// Autowired IDataBlockRepository for data block operations.
 	@Autowired
 	private IDataBlockRepository dataRepository;
 
@@ -51,16 +53,7 @@ public class DataBlockService implements IDataBlockService {
 		}
 		return new ArrayList<DataBlock>();
 	}
-/**
- * Updates the data associated with a user and data type.
- * If the data block for the given user and data type doesn't exist, it creates a new one.
- * If it exists, it merges the existing data with the new data.
- * 
- * @param jsonNode The JSON data to be updated.
- * @param dataType The type of data to be updated.
- * @param userId   The ID of the user associated with the data.
- * @throws IOException If there is an I/O error while processing the data.
- */
+
 	@Override
 	public void UpdateData(JsonNode jsonNode, DataType dataType, String userId) throws IOException {
 		Optional<DataBlock> oBlock = dataRepository.findByOwnerUserIdAndType(userId, dataType);
@@ -81,14 +74,6 @@ public class DataBlockService implements IDataBlockService {
 		dataRepository.save(dBlock);
 	}
 
-	/**
- * Resets the data associated with a user and data type.
- * If the data block for the given user and data type doesn't exist, it creates a new one with an empty JSON object.
- * If it exists, it resets the data by setting it to an empty JSON object.
- * 
- * @param userId   The ID of the user associated with the data.
- * @param dataType The type of data to be reset.
- */
 	@Override
 	public void resetData(String userId, DataType dataType) {
 		Optional<DataBlock> oBlock = dataRepository.findByOwnerUserIdAndType(userId, dataType);
@@ -106,5 +91,22 @@ public class DataBlockService implements IDataBlockService {
 		}
 
 		dataRepository.save(dBlock);
+	}
+
+	@Override
+	public DataBlock getData(String userId, DataType dataType) {
+		Optional<DataBlock> oBlock = dataRepository.findByOwnerUserIdAndType(userId, dataType);
+		DataBlock dBlock;
+		if (!oBlock.isPresent()) {
+			dBlock = new DataBlock();
+
+			dBlock.setType(dataType);
+			dBlock.setOwnerUserId(userId);
+			dBlock.setNodeData(mapper.createObjectNode().toString());
+
+		} else {
+			dBlock = oBlock.get();
+		}
+		return dBlock;
 	}
 }

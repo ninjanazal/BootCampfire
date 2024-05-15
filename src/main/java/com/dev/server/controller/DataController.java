@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.server.constants.data.DataType;
 import com.dev.server.dto.exceptions.InvalidPayloadResponseDto;
 import com.dev.server.dto.response.GenericResponseDto;
+import com.dev.server.dto.response.GetDataResponseDto;
+import com.dev.server.entity.DataBlock;
 import com.dev.server.entity.User;
 import com.dev.server.exeptions.types.BadSessionException;
 import com.dev.server.exeptions.types.InvalidDataException;
@@ -119,6 +121,35 @@ public class DataController {
 
 		} catch (IllegalArgumentException exc) {
 			throw new InvalidDataException(String.format("Invalid type param [%s]", type),
+					HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * Handles HTTP GET requests to retrieve data.
+	 * 
+	 * @param token The session token for authentication. Required.
+	 * @param type  The type of data to be retrieved. Required.
+	 * @return A JSON response containing the retrieved data.
+	 * @throws BadSessionException  If the session is invalid or expired.
+	 * @throws InvalidDataException If the provided data type is invalid.
+	 */
+	@GetMapping("/get")
+	public ResponseEntity<String> get(
+			@RequestParam(value = "token", required = true) String token,
+			@RequestParam(value = "type", required = true) String type) throws BadSessionException, InvalidDataException {
+
+		sessionService.validateSession(token);
+		User owner = sessionService.getSessionOwner(token);
+
+		try {
+			DataType dataType = DataType.valueOf(type.toUpperCase());
+			DataBlock respBlock = dataBlockService.getData(owner.getId().toHexString(), dataType);
+
+			return responseService.createJsonResponse(new GetDataResponseDto(mapper, respBlock));
+
+		} catch (IllegalArgumentException e) {
+			throw new InvalidDataException(String.format("The provided token is invalid %s", token),
 					HttpStatus.BAD_REQUEST);
 		}
 	}
