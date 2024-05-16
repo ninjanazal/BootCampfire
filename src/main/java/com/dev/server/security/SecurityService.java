@@ -24,7 +24,7 @@ public class SecurityService implements ISecurityService {
 	@Override
 	public String AnonymizeIpAddress(String address) {
 		if (address == null || address.isEmpty()) {
-			return address;
+			return null;
 		}
 
 		int lastDotIndex = address.lastIndexOf('.'); // IPv4
