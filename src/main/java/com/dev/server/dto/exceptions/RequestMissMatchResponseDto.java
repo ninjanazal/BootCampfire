@@ -1,11 +1,11 @@
-package com.dev.server.middleware.out.data.exeptions;
+package com.dev.server.dto.exceptions;
 
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
-import com.dev.server.middleware.out.data.ResponseDto;
+import com.dev.server.dto.ResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

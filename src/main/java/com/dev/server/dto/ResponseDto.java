@@ -1,4 +1,4 @@
-package com.dev.server.middleware.out.data;
+package com.dev.server.dto;
 
 import org.springframework.http.HttpStatus;
 

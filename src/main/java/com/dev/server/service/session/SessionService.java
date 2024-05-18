@@ -57,11 +57,15 @@ public class SessionService implements ISessionService {
 
 		List<Session> userSessions = sessionRepository.findByOwnerUserId(userId);
 		Cache sCache = cacheManager.getCache("sessions");
+		Cache uCache = cacheManager.getCache("users");
 
 		for (Session s : userSessions) {
 			if (s.getType() == result.getType()) {
 				if (sCache != null) {
 					sCache.evictIfPresent(s.getId().toHexString());
+				}
+				if(uCache != null) {
+					uCache.evictIfPresent(s.getId().toHexString());
 				}
 				sessionRepository.delete(s);
 			}
@@ -81,6 +85,12 @@ public class SessionService implements ISessionService {
 		Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
 		if (fSession.isPresent()) {
 			sessionRepository.delete(fSession.get());
+
+			Cache uCache = cacheManager.getCache("users");
+			if (uCache != null) {
+				uCache.evictIfPresent(token);
+			}
+
 			return;
 		}
 		throw new BadSessionException("Couldnt close session, token not found", HttpStatus.NOT_FOUND);
@@ -99,7 +109,7 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
-	@Cacheable(value = "User", key = "#token")
+	@Cacheable(value = "users", key = "#token")
 	public User getSessionOwner(String token) throws InvalidDataException, BadSessionException {
 		if (!token.isEmpty()) {
 			Optional<Session> fSession = sessionRepository.findById(new ObjectId(token));
@@ -112,7 +122,31 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
+	public boolean isTokenValid(String token) throws BadSessionException {
+		Session lSession = getSessionByToken(token);
+		return isSessionValid(lSession);
+	}
+
+	@Override
 	public boolean isSessionValid(Session session) {
 		return session.getExpirationDate().isAfter(LocalDateTime.now());
+	}
+
+	@Override
+	public void validateSession(String token) throws BadSessionException {
+		boolean isValid = isTokenValid(token);
+		if (isValid) {
+			return;
+		}
+		closeSessionByToken(token);
+		throw new BadSessionException("Invalid session token", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public void canSessionWrite(String token) throws BadSessionException {
+		Session lSession = getSessionByToken(token);
+		if (lSession.getType() == SessionType.READ) {
+			throw new BadSessionException("Read Only session, cant edit data", HttpStatus.BAD_REQUEST);
+		}
 	}
 }

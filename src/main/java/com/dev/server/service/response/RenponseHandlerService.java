@@ -1,11 +1,11 @@
-package com.dev.server.middleware.out;
+package com.dev.server.service.response;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.dev.server.middleware.out.data.ResponseDto;
+import com.dev.server.dto.ResponseDto;
 
 /**
  * This class is a Spring `@Service` bean that provides utility methods for

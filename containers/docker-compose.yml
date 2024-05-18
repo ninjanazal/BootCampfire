@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Cache DB (Redis)
   cache_db:
     container_name: cache_redis
     image: redis:7.2.4-alpine
@@ -16,7 +15,7 @@ services:
     image: mongo:latest
     restart: unless-stopped
     environment:
-      MONGO_INITDB_DATABASE: game_data
+      MONGO_INITDB_DATABASE: server_db
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
     ports:

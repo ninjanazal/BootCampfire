@@ -1,4 +1,4 @@
-package com.dev.server.middleware.inc.session;
+package com.dev.server.dto.request;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
