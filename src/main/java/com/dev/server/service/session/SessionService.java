@@ -63,6 +63,8 @@ public class SessionService implements ISessionService {
 			if (s.getType() == result.getType()) {
 				if (sCache != null) {
 					sCache.evictIfPresent(s.getId().toHexString());
+				}
+				if(uCache != null) {
 					uCache.evictIfPresent(s.getId().toHexString());
 				}
 				sessionRepository.delete(s);
