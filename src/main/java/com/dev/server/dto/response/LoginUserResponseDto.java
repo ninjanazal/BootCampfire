@@ -45,6 +45,7 @@ public class LoginUserResponseDto implements ResponseDto {
 				"Created session of type %s to %s", lSession.getType().name(), luser.getName()));
 
 		ObjectNode sessionNode = mapper.createObjectNode();
+		sessionNode.put("name", luser.getName());
 		sessionNode.put("token", lSession.getId().toHexString());
 		sessionNode.put("expiration_date", DateTimeActions.FormatDateToString(lSession.getExpirationDate()));
 

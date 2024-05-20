@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
@@ -33,15 +33,19 @@ import com.dev.server.service.session.SessionService;
 import com.dev.server.service.user.UserService;
 
 public class SessionServiceTest {
+	// Injects the sessionService into the test class.
 	@InjectMocks
 	private SessionService sessionService;
 
+	// Injects the userService into the test class.
 	@InjectMocks
 	private UserService userService;
-
+	
+	// Mocks the ISessionRepository for simulating database interactions.
 	@Mock
 	private ISessionRepository sessionRepository;
 
+	// Mocks the CacheManager for simulating cache interactions.
 	@Mock
 	private CacheManager cacheManager;
 
@@ -54,11 +58,20 @@ public class SessionServiceTest {
 		MockitoAnnotations.openMocks(this);
 	}
 
+	/**
+	 * Resets the mock objects after each test method execution.
+	 */
 	@AfterEach
 	public void resetAfter() {
 		reset(cacheManager, sessionRepository);
 	}
 
+	/**
+	 * Tests the creation of a session for a user.
+	 * Verifies that the session is saved in the repository and added to the cache.
+	 * 
+	 * @throws BadSessionException if the session type is invalid.
+	 */
 	@Test
 	public void testCreateSessionForUser() throws BadSessionException {
 		String userId = "user123";
@@ -93,6 +106,12 @@ public class SessionServiceTest {
 		verify(mockSCache, times(1)).put(any(String.class), eq(createdSession));
 	}
 
+	/**
+	 * Tests the creation of a session with an invalid session type.
+	 * Verifies that a BadSessionException is thrown.
+	 * 
+	 * @throws BadSessionException if the session type is invalid.
+	 */
 	@Test
 	public void testInvalidCreateSessionForUser() throws BadSessionException {
 		String userId = "user123";
@@ -100,5 +119,28 @@ public class SessionServiceTest {
 
 		assertThrows(BadSessionException.class,
 				() -> sessionService.createSessionForUser(userId, sessionType));
+	}
+
+	/**
+	 * Tests the closing of a session by its token.
+	 * Verifies that the session is deleted from the repository and removed from the
+	 * cache.
+	 * 
+	 * @throws BadSessionException if the session token is invalid.
+	 */
+	@Test
+	public void testCloseSessionByToken() throws BadSessionException {
+		String token = (new ObjectId()).toHexString();
+		Session expSesison = new Session();
+
+		when(sessionRepository.findById(new ObjectId(token))).thenReturn(Optional.of(expSesison));
+
+		Cache mockUCache = Mockito.mock(Cache.class);
+		when(cacheManager.getCache("sessions")).thenReturn(mockUCache);
+
+		sessionService.closeSessionByToken(token);
+
+		verify(sessionRepository, times(1)).delete(expSesison);
+
 	}
 }
