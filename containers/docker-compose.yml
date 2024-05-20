@@ -25,6 +25,13 @@ services:
       - game-data_config:/data/configdb
       - ./start/:/docker-entrypoint-initdb.d/:ro
 
+
+  server_app_1:
+    image: server-app:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
 volumes:
   game-data:
   game-data_config:
