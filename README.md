@@ -11,7 +11,9 @@ This is also only a study project :)
 
 ## Quick Start
 
-Just run the Docker Compose file and let the magic happen. No complicated setup, no fuss. It's so easy, even your cat could do it (if your cat could code).
+1 - Build the project and create the docker image on the root.
+2 - Add an .env file to the containers folder, this should have the keys for the docker-compose file.
+3 - Just run the Docker Compose file and let the magic happen. No complicated setup, no fuss. It's so easy, even your cat could do it (if your cat could code).
 
 ---
 
