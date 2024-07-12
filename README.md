@@ -1,6 +1,6 @@
-# BootyliciousAccounts
+# BootCampfire
 
-Welcome to BootyliciousAccounts! This is the Spring Boot project that's more springy than a kangaroo on a pogo stick and packed with more MongoDB and Redis goodness than you can shake a stick at. It's your go-to service for account management, registration, login, and session management.
+Welcome to BootCampfire! This is the Spring Boot project that's more springy than a kangaroo on a pogo stick and packed with more MongoDB and Redis goodness than you can shake a stick at. It's your go-to service for account management, registration, login, and session management.
 This is also only a study project :)
 
 ## Features
@@ -15,4 +15,4 @@ Just run the Docker Compose file and let the magic happen. No complicated setup,
 
 ---
 
-Get ready to spring into action with BootyliciousAccounts - where backend services meet fun!
+Get ready to spring into action with BootCampfire - where backend services meet fun!
