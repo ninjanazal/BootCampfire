@@ -1,6 +1,7 @@
 # BootyliciousAccounts
 
 Welcome to BootyliciousAccounts! This is the Spring Boot project that's more springy than a kangaroo on a pogo stick and packed with more MongoDB and Redis goodness than you can shake a stick at. It's your go-to service for account management, registration, login, and session management.
+This is also only a study project :)
 
 ## Features
 
@@ -11,20 +12,6 @@ Welcome to BootyliciousAccounts! This is the Spring Boot project that's more spr
 ## Quick Start
 
 Just run the Docker Compose file and let the magic happen. No complicated setup, no fuss. It's so easy, even your cat could do it (if your cat could code).
-
-## Why BootyliciousAccounts?
-
-Because managing user accounts should never be boring. And with a name like this, how could it be?
-
-## License
-
-MIT License - because sharing is caring!
-
-## Shoutouts
-
-- Spring Boot for being the springiest framework ever.
-- MongoDB and Redis for making data management a breeze.
-- You, for being awesome and checking out BootyliciousAccounts.
 
 ---
 
